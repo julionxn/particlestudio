@@ -1,0 +1,15 @@
+{
+  "required": true,
+  "package": "net.pulga22.particlestudio.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "mixins": [
+    "PlayerEntityMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "client": [
+    "KeyboardMixin",
+    "MouseHandlerMixin"
+  ]
+}
