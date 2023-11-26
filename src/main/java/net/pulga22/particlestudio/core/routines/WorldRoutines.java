@@ -7,10 +7,7 @@ import java.util.HashMap;
 
 public class WorldRoutines implements Serializable {
 
-    public final HashMap<String, Routine> routines = new HashMap<>(){{
-        put("hola", new Routine());
-        put("adios", new Routine());
-    }};
+    public final HashMap<String, Routine> routines = new HashMap<>();
 
     @Nullable
     public Routine getRoutine(String name){
