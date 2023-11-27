@@ -4,9 +4,6 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.pulga22.particlestudio.core.editor.screen.menus.TestMenu;
 import net.pulga22.particlestudio.utils.mixins.PlayerEntityAccessor;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class EditorInputHandler {
 
     private final PlayerEditor playerEditor;

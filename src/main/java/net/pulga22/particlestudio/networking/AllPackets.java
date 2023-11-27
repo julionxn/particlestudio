@@ -13,8 +13,6 @@ public class AllPackets {
     private static final HashMap<Identifier, ServerPlayNetworking.PlayChannelHandler> C2SEntries = new HashMap<>();
     private static final HashMap<Identifier, ClientPlayNetworking.PlayChannelHandler> S2CEntries = new HashMap<>();
 
-    public static final Identifier S2C_TOGGLE_EDITING_MODE = s2c("toggle_editing_mode",
-            S2CToggleEditingMode::onClient);
     public static final Identifier C2S_REQUEST_ROUTINES_NAMES = c2s("request_routines_names",
             C2SRequestRoutinesNames::onServer);
     public static final Identifier S2C_RECEIVE_ROUTINES_NAMES = s2c("receive_routines_names",

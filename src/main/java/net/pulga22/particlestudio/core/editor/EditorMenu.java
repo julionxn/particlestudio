@@ -1,6 +1,5 @@
 package net.pulga22.particlestudio.core.editor;
 
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.util.Identifier;
 import net.pulga22.particlestudio.ParticleStudio;

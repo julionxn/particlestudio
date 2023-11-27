@@ -1,7 +1,5 @@
 package net.pulga22.particlestudio.core.routines;
 
-import org.jetbrains.annotations.Nullable;
-
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Optional;
