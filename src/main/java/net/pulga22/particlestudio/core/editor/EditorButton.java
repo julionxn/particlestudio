@@ -1,6 +1,7 @@
 package net.pulga22.particlestudio.core.editor;
 
 import net.minecraft.util.Identifier;
+import net.pulga22.particlestudio.ParticleStudio;
 import net.pulga22.particlestudio.core.routines.Routine;
 
 import java.util.HashMap;
@@ -38,6 +39,35 @@ public class EditorButton {
 
     public Identifier getButtonTexture(){
         return buttonTexture;
+    }
+
+    public static Builder builder(String path){
+        return new Builder(path);
+    }
+
+    public static class Builder {
+
+        private final String path;
+        private final EditorButton button;
+
+        public Builder(String path){
+            this.path = path;
+            button = new EditorButton(new Identifier(ParticleStudio.MOD_ID, "textures/buttons/" + path + "main.png"));
+        }
+
+        public Builder setAction(Actions action, Consumer<Routine> consumer, String description){
+            button.setAction(action, getTextureOf(action), consumer, description);
+            return this;
+        }
+
+        private Identifier getTextureOf(Actions action){
+            return new Identifier(ParticleStudio.MOD_ID, "textures/buttons/" + path + action.toString().toLowerCase() + ".png");
+        }
+
+        public EditorButton build(){
+            return button;
+        }
+
     }
 
 }
