@@ -29,10 +29,10 @@ public class EditorMenu {
 
         for (int i = 0; i < buttons.size(); i++) {
             if (i == currentIndex){
-                context.drawTexture(ACTIVE_BUTTON_TEXTURE, x - 2, 40 - 2, 0, 0, 0, 24, 24, 24, 24);
+                context.drawTexture(ACTIVE_BUTTON_TEXTURE, x - 2, 8, 0, 0, 0, 24, 24, 24, 24);
             }
             EditorButton currentButton = buttons.get(i);
-            context.drawTexture(currentButton.getCurrentTexture(), x, 40, 0, 0, 0, buttonScale, buttonScale, buttonScale, buttonScale);
+            context.drawTexture(currentButton.getButtonTexture(), x, 10, 0, 0, 0, buttonScale, buttonScale, buttonScale, buttonScale);
             x += buttonGap + buttonScale;
         }
 
@@ -41,10 +41,10 @@ public class EditorMenu {
     public void handleKeyboardInput(int key, Routine routine){
         EditorButton currentButton = buttons.get(currentIndex);
         switch (key){
-            case 81 -> currentButton.onQPress(routine);
-            case 69 -> currentButton.onEPress(routine);
-            case 90 -> currentButton.onZPress(routine);
-            case 67 -> currentButton.onCPress(routine);
+            case 81 -> currentButton.perform(Actions.Q, routine);
+            case 69 -> currentButton.perform(Actions.E, routine);
+            case 90 -> currentButton.perform(Actions.Z, routine);
+            case 67 -> currentButton.perform(Actions.C, routine);
         }
     }
 

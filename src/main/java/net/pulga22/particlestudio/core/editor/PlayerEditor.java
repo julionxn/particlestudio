@@ -14,11 +14,9 @@ public class PlayerEditor {
     private final HashMap<String, Routine> loadedRoutines = new HashMap<>();
     private Set<String> routineNames = new HashSet<>();
     private Routine currentRoutine = null;
-    private final PlayerEntity player;
 
     public PlayerEditor(PlayerEntity player){
         this.editorInputHandler = new EditorInputHandler(this, player);
-        this.player = player;
     }
 
     public EditorInputHandler getInputHandler(){

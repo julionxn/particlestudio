@@ -9,6 +9,8 @@ public class EditorInputHandler {
     private final PlayerEditor playerEditor;
     private final PlayerEntity player;
     private EditorMenu currentMenu = new TestMenu(this);
+    private long lastNanoButtonClicked = 0;
+
 
     public EditorInputHandler(PlayerEditor playerEditor, PlayerEntity player) {
         this.playerEditor = playerEditor;
@@ -24,7 +26,6 @@ public class EditorInputHandler {
     }
 
     public void handleKeyboard(int key){
-        System.out.println(key);
         if (key == 256 && currentMenu.getPreviousMenu() != null){
             currentMenu = currentMenu.getPreviousMenu();
             return;
@@ -33,6 +34,11 @@ public class EditorInputHandler {
         if (key == 75) {
             PlayerEntityAccessor accessor = (PlayerEntityAccessor) player;
             accessor.particlestudio$setEditing(false);
+            return;
+        }
+
+        if (key == 258) {
+            handleMouseScroll(1.0);
             return;
         }
 
