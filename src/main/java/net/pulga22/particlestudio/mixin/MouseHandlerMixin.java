@@ -28,4 +28,14 @@ public class MouseHandlerMixin {
         ci.cancel();
     }
 
+    @Inject(method = "onMouseButton", at = @At("HEAD"))
+    public void handleClick(long window, int button, int action, int mods, CallbackInfo ci){
+        if (button != 1) return;
+        PlayerEntity player = client.player;
+        if (player == null) return;
+        PlayerEntityAccessor accessor = (PlayerEntityAccessor) player;
+        if (!accessor.particlestudio$isEditing()) return;
+        accessor.particlestudio$getEditor().getInputHandler().handleRightClick();
+    }
+
 }

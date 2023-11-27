@@ -10,6 +10,7 @@
   },
   "client": [
     "KeyboardMixin",
+    "MinecraftClientMixin",
     "MouseHandlerMixin"
   ]
 }

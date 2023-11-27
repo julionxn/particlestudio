@@ -1,12 +1,16 @@
 package net.pulga22.particlestudio.core.editor;
 
+import net.pulga22.particlestudio.core.editor.screen.menus.TestMenu;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class EditorInputHandler {
 
     private final PlayerEditor playerEditor;
-    private final List<EditorMenu> menus = new ArrayList<>();
+    private final List<EditorMenu> menus = new ArrayList<>(){{
+        add(new TestMenu());
+    }};
     private int currentIndex = 0;
 
     public EditorInputHandler(PlayerEditor playerEditor) {
@@ -22,6 +26,15 @@ public class EditorInputHandler {
     }
 
     public void handleKeyboard(int key){
+        if (currentIndex > 0 && key == 256){
+            currentIndex--;
+            return;
+        }
         playerEditor.getCurrentRoutine().ifPresent(routine -> menus.get(currentIndex).handleKeyboardInput(key, routine));
     }
+
+    public EditorMenu getCurrentMenu(){
+        return menus.get(currentIndex);
+    }
+
 }

@@ -1,49 +1,55 @@
-package net.pulga22.particlestudio.core.editor.screen;
+package net.pulga22.particlestudio.core.editor.screen.gui;
 
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.Text;
 import net.pulga22.particlestudio.core.editor.PlayerEditor;
-import net.pulga22.particlestudio.core.routines.WorldRoutines;
+import net.pulga22.particlestudio.networking.AllPackets;
 import net.pulga22.particlestudio.utils.mixins.PlayerEntityAccessor;
 
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.Set;
 import java.util.function.Consumer;
 
 public class RoutineSelectionMenu extends Screen {
 
     private final PlayerEntity player;
     private final PlayerEditor playerEditor;
-    private final WorldRoutines worldRoutines;
+    private final Set<String> routineNames;
 
     public RoutineSelectionMenu(PlayerEntity player) {
         super(Text.of("RoutineSelectionMenu"));
         this.player = player;
         this.playerEditor = ((PlayerEntityAccessor) player).particlestudio$getEditor();
-        this.worldRoutines = playerEditor.getLoadedRoutines();
+        this.routineNames = playerEditor.getRoutineNames();
     }
 
     @Override
     protected void init() {
         super.init();
         if (client == null) return;
-        int routinesSize = worldRoutines.routines.size();
-        int startingX = client.getWindow().getScaledWidth() / 2 - 75;
-        AtomicInteger startingY = new AtomicInteger((int) (client.getWindow().getScaledHeight() / 2 - (Math.floor((routinesSize / 2) * 30))));
-        this.addRoutineButton("Nueva rutina", editor -> {
-            System.out.println("NUEVA RUTINA");
-        }, startingX, startingY.get());
-        startingY.addAndGet(30);
-        worldRoutines.routines.forEach((name, routine) -> {
-            addRoutineButton(name, editor -> {}, startingX, startingY.getAndAdd(30));
-        });
+        int routinesSize = routineNames.size() + 1;
+        int x = client.getWindow().getScaledWidth() / 2 - 75;
+        int y = (int) (client.getWindow().getScaledHeight() / 2 - 15 - Math.ceil((routinesSize / 2) * 30));
+        addRoutineButton("Nueva rutina", editor -> client.setScreen(new NewRoutineMenu(this, editor)), x, y);
+        y += 30;
+        for (String name : routineNames) {
+            addRoutineButton(name, editor -> {
+                ClientPlayNetworking.send(AllPackets.C2S_REQUEST_ROUTINE_SYNC, PacketByteBufs.create().writeString(name));
+                close();
+            }, x, y);
+            y += 30;
+        }
+        
     }
 
     private void addRoutineButton(String title, Consumer<PlayerEditor> onPress, int x, int y){
         ButtonWidget routineButton = ButtonWidget.builder(Text.of(title), button -> onPress.accept(playerEditor))
                 .dimensions(x, y, 150, 20)
                 .build();
+        addDrawableChild(routineButton);
     }
 
 

@@ -3,10 +3,15 @@ package net.pulga22.particlestudio;
 import net.fabricmc.api.ModInitializer;
 
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
+import net.fabricmc.fabric.api.event.player.UseItemCallback;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
+import net.minecraft.client.network.ClientPlayerInteractionManager;
+import net.minecraft.item.ItemStack;
+import net.minecraft.particle.ParticleType;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.TypedActionResult;
 import net.pulga22.particlestudio.command.AllCommands;
 import net.pulga22.particlestudio.items.ParticleController;
 import net.pulga22.particlestudio.networking.AllPackets;
@@ -34,6 +39,10 @@ public class ParticleStudio implements ModInitializer {
 		ServerWorldEvents.LOAD.register((server, world) -> {
 			ParticleRoutinesManager.getInstance().loadWorld(world, new WorldRoutines());
 		});
+
+		for (ParticleType<?> particleType : Registries.PARTICLE_TYPE) {
+			ParticleRoutinesManager.getInstance().registerParticle(particleType);
+		}
 
 		LOGGER.info("Hello Fabric world!");
 	}
