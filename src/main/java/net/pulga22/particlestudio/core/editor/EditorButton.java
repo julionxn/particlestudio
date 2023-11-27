@@ -61,7 +61,7 @@ public class EditorButton {
         }
 
         private Identifier getTextureOf(Actions action){
-            return new Identifier(ParticleStudio.MOD_ID, "textures/buttons/" + path + action.toString().toLowerCase() + ".png");
+            return new Identifier(ParticleStudio.MOD_ID, "textures/buttons/" + path + "/" + action.toString().toLowerCase() + ".png");
         }
 
         public EditorButton build(){
