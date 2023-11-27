@@ -1,6 +1,8 @@
 package net.pulga22.particlestudio.core.editor;
 
+import net.minecraft.entity.player.PlayerEntity;
 import net.pulga22.particlestudio.core.editor.screen.menus.TestMenu;
+import net.pulga22.particlestudio.utils.mixins.PlayerEntityAccessor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,33 +10,44 @@ import java.util.List;
 public class EditorInputHandler {
 
     private final PlayerEditor playerEditor;
-    private final List<EditorMenu> menus = new ArrayList<>(){{
-        add(new TestMenu());
-    }};
-    private int currentIndex = 0;
+    private final PlayerEntity player;
+    private EditorMenu currentMenu = new TestMenu(this);
 
-    public EditorInputHandler(PlayerEditor playerEditor) {
+    public EditorInputHandler(PlayerEditor playerEditor, PlayerEntity player) {
         this.playerEditor = playerEditor;
+        this.player = player;
     }
 
     public void handleRightClick(){
-        playerEditor.getCurrentRoutine().ifPresent(routine -> menus.get(currentIndex).handleRightClick(routine));
+        playerEditor.getCurrentRoutine().ifPresent(routine -> currentMenu.handleRightClick(routine));
     }
 
     public void handleMouseScroll(double vertical){
-        menus.get(currentIndex).handleMouseScroll(vertical);
+        currentMenu.handleMouseScroll(vertical);
     }
 
     public void handleKeyboard(int key){
-        if (currentIndex > 0 && key == 256){
-            currentIndex--;
+        System.out.println(key);
+        if (key == 256 && currentMenu.getPreviousMenu() != null){
+            currentMenu = currentMenu.getPreviousMenu();
             return;
         }
-        playerEditor.getCurrentRoutine().ifPresent(routine -> menus.get(currentIndex).handleKeyboardInput(key, routine));
+        //K button
+        if (key == 75) {
+            PlayerEntityAccessor accessor = (PlayerEntityAccessor) player;
+            accessor.particlestudio$setEditing(false);
+            return;
+        }
+
+        playerEditor.getCurrentRoutine().ifPresent(routine -> currentMenu.handleKeyboardInput(key, routine));
     }
 
     public EditorMenu getCurrentMenu(){
-        return menus.get(currentIndex);
+        return currentMenu;
+    }
+
+    public void changeCurrentMenu(EditorMenu menu){
+        this.currentMenu = menu;
     }
 
 }

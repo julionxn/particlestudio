@@ -1,5 +1,6 @@
 package net.pulga22.particlestudio.core.editor;
 
+import net.minecraft.entity.player.PlayerEntity;
 import net.pulga22.particlestudio.core.routines.Routine;
 
 import java.util.HashMap;
@@ -13,9 +14,11 @@ public class PlayerEditor {
     private final HashMap<String, Routine> loadedRoutines = new HashMap<>();
     private Set<String> routineNames = new HashSet<>();
     private Routine currentRoutine = null;
+    private final PlayerEntity player;
 
-    public PlayerEditor(){
-        this.editorInputHandler = new EditorInputHandler(this);
+    public PlayerEditor(PlayerEntity player){
+        this.editorInputHandler = new EditorInputHandler(this, player);
+        this.player = player;
     }
 
     public EditorInputHandler getInputHandler(){

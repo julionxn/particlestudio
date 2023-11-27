@@ -21,11 +21,12 @@ public class KeyboardMixin {
     @Shadow @Final private MinecraftClient client;
     @Unique
     private final Set<Integer> keysToHandle = new HashSet<>(){{
-       add(256); add(81); add(69); add(90); add(67);
+       add(256); add(81); add(69); add(90); add(67); add(75);
     }};
 
     @Inject(method = "onKey", at = @At("TAIL"))
     public void handleInput(long window, int key, int scancode, int action, int modifiers, CallbackInfo ci){
+        System.out.println(key);
         PlayerEntity player = client.player;
         if (player == null) return;
         if (!keysToHandle.contains(key)) return;

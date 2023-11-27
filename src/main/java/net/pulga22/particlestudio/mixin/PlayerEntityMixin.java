@@ -22,7 +22,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements PlayerEn
     @Unique
     private boolean isEditing = false;
     @Unique
-    private final PlayerEditor playerEditor = new PlayerEditor();
+    private final PlayerEditor playerEditor = new PlayerEditor((PlayerEntity) (Object) this) ;
 
     protected PlayerEntityMixin(EntityType<? extends LivingEntity> entityType, World world) {
         super(entityType, world);
