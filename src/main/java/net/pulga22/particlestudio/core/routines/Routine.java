@@ -1,6 +1,7 @@
 package net.pulga22.particlestudio.core.routines;
 
 import java.io.*;
+import java.util.Optional;
 
 public class Routine extends RoutineLike implements Serializable {
 
@@ -29,22 +30,22 @@ public class Routine extends RoutineLike implements Serializable {
         return length;
     }
 
-    public static byte[] serialize(Routine routine){
+    public static Optional<byte[]> serialize(Routine routine){
         try (ByteArrayOutputStream bos = new ByteArrayOutputStream();
              ObjectOutputStream oos = new ObjectOutputStream(bos)) {
             oos.writeObject(routine);
-            return bos.toByteArray();
+            return Optional.of(bos.toByteArray());
         } catch (IOException e) {
-            return null;
+            return Optional.empty();
         }
     }
 
-    public static Routine deserialize(byte[] serializedRoutine){
+    public static Optional<Routine> deserialize(byte[] serializedRoutine){
         try (ByteArrayInputStream bis = new ByteArrayInputStream(serializedRoutine);
              ObjectInputStream ois = new ObjectInputStream(bis)) {
-            return (Routine) ois.readObject();
+            return Optional.of((Routine) ois.readObject());
         } catch (IOException | ClassNotFoundException e) {
-            return null;
+            return Optional.empty();
         }
     }
 

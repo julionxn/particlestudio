@@ -24,9 +24,11 @@ public class C2SRequestRoutineSync {
             if (worldRoutines == null) return;
             Optional<Routine> routineOptional = worldRoutines.getRoutine(name);
             routineOptional.ifPresent(routine -> {
-                byte[] serialized = Routine.serialize(routine);
-                PacketByteBuf newBuf = PacketByteBufs.create().writeString(name).writeByteArray(serialized);
-                ServerPlayNetworking.send(player, AllPackets.S2C_RECEIVE_ROUTINE_SYNC, newBuf);
+                Optional<byte[]> serializedOptional = Routine.serialize(routine);
+                serializedOptional.ifPresent(serialized -> {
+                    PacketByteBuf newBuf = PacketByteBufs.create().writeString(name).writeByteArray(serialized);
+                    ServerPlayNetworking.send(player, AllPackets.S2C_RECEIVE_ROUTINE_SYNC, newBuf);
+                });
             });
         });
     }
