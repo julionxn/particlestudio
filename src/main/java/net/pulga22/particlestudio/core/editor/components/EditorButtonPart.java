@@ -1,6 +1,7 @@
-package net.pulga22.particlestudio.core.editor;
+package net.pulga22.particlestudio.core.editor.components;
 
 import net.minecraft.util.Identifier;
+import net.pulga22.particlestudio.core.editor.Actions;
 import net.pulga22.particlestudio.core.routines.Routine;
 
 import java.util.function.Consumer;

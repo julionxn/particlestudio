@@ -1,16 +1,15 @@
 package net.pulga22.particlestudio.core.editor;
 
 import net.minecraft.entity.player.PlayerEntity;
-import net.pulga22.particlestudio.core.editor.screen.menus.TestMenu;
+import net.pulga22.particlestudio.core.editor.components.EditorMenu;
+import net.pulga22.particlestudio.core.editor.screen.menus.MainMenu;
 import net.pulga22.particlestudio.utils.mixins.PlayerEntityAccessor;
 
 public class EditorInputHandler {
 
     private final PlayerEditor playerEditor;
     private final PlayerEntity player;
-    private EditorMenu currentMenu = new TestMenu(this);
-    private long lastNanoButtonClicked = 0;
-
+    private EditorMenu currentMenu = new MainMenu(this);
 
     public EditorInputHandler(PlayerEditor playerEditor, PlayerEntity player) {
         this.playerEditor = playerEditor;
@@ -30,20 +29,18 @@ public class EditorInputHandler {
             currentMenu = currentMenu.getPreviousMenu();
             return;
         }
-        //K button
         if (key == 75) {
             PlayerEntityAccessor accessor = (PlayerEntityAccessor) player;
             accessor.particlestudio$setEditing(false);
             return;
         }
-
         if (key == 258) {
             handleMouseScroll(1.0);
             return;
         }
-
         playerEditor.getCurrentRoutine().ifPresent(routine -> currentMenu.handleKeyboardInput(key, routine));
     }
+
 
     public EditorMenu getCurrentMenu(){
         return currentMenu;

@@ -16,7 +16,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Mixin(Keyboard.class)
-public class KeyboardMixin {
+public abstract class KeyboardMixin {
 
     @Shadow @Final private MinecraftClient client;
     @Unique

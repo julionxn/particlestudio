@@ -1,13 +1,13 @@
-package net.pulga22.particlestudio.core.editor;
+package net.pulga22.particlestudio.core.editor.components;
 
 import net.minecraft.util.Identifier;
 import net.pulga22.particlestudio.ParticleStudio;
+import net.pulga22.particlestudio.core.editor.Actions;
 import net.pulga22.particlestudio.core.routines.Routine;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Optional;
 import java.util.function.Consumer;
 
 public class EditorButton {
@@ -58,7 +58,7 @@ public class EditorButton {
 
         public Builder(String path, String description){
             this.path = path;
-            button = new EditorButton(new Identifier(ParticleStudio.MOD_ID, "textures/buttons/" + path + "main.png"), description);
+            button = new EditorButton(new Identifier(ParticleStudio.MOD_ID, "textures/buttons/" + path + "/main.png"), description);
         }
 
         public Builder setAction(Actions action, Consumer<Routine> consumer, String description){
