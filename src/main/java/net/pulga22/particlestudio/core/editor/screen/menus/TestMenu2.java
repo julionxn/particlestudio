@@ -12,10 +12,10 @@ public class TestMenu2 extends EditorMenu {
     private static final Identifier eTexture = of("teste.png");
 
     public TestMenu2(EditorMenu previousMenu, EditorInputHandler editorInputHandler){
-        super(previousMenu, editorInputHandler);
-        addButton(new EditorButton(qTexture)
+        super(previousMenu, editorInputHandler, "Menu2");
+        addButton(new EditorButton(qTexture, "test1")
                 .setAction(Actions.Q, qTexture, routine -> System.out.println("Q1"), "q1"));
-        addButton(new EditorButton(qTexture)
+        addButton(new EditorButton(qTexture, "test2")
                 .setAction(Actions.Q, qTexture, routine -> System.out.println("Q2"), "q2")
                 .setAction(Actions.E, eTexture, routine -> System.out.println("E2"), "e2"));
     }

@@ -4,21 +4,25 @@ import net.minecraft.util.Identifier;
 import net.pulga22.particlestudio.ParticleStudio;
 import net.pulga22.particlestudio.core.routines.Routine;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
 
 public class EditorButton {
 
     private final Identifier buttonTexture;
+    private final String description;
     private final HashMap<Actions, EditorButtonPart> actions = new HashMap<>();
 
-    public EditorButton(Identifier buttonTexture){
+    public EditorButton(Identifier buttonTexture, String description){
         this.buttonTexture = buttonTexture;
+        this.description = description;
     }
 
     public EditorButton setAction(Actions action, Identifier texture, Consumer<Routine> consumer, String description){
-        actions.put(action, new EditorButtonPart(texture, consumer, description));
+        actions.put(action, new EditorButtonPart(action, texture, consumer, description));
         return this;
     }
 
@@ -27,22 +31,24 @@ public class EditorButton {
         actions.get(action).perform(routine);
     }
 
-    public Optional<Identifier> getTexture(Actions action){
-        if (!actions.containsKey(action)) return Optional.empty();
-        return Optional.of(actions.get(action).getTexture());
-    }
-
-    public Optional<String> getDescription(Actions action){
-        if (!actions.containsKey(action)) return Optional.empty();
-        return Optional.of(actions.get(action).getDescription());
+    public List<EditorButtonPart> getActions(){
+        List<EditorButtonPart> buttonParts = new ArrayList<>();
+        for (Actions action : Actions.values()){
+            if (actions.containsKey(action)) buttonParts.add(actions.get(action));
+        }
+        return buttonParts;
     }
 
     public Identifier getButtonTexture(){
         return buttonTexture;
     }
 
-    public static Builder builder(String path){
-        return new Builder(path);
+    public String getDescription() {
+        return description;
+    }
+
+    public static Builder builder(String path, String description){
+        return new Builder(path, description);
     }
 
     public static class Builder {
@@ -50,9 +56,9 @@ public class EditorButton {
         private final String path;
         private final EditorButton button;
 
-        public Builder(String path){
+        public Builder(String path, String description){
             this.path = path;
-            button = new EditorButton(new Identifier(ParticleStudio.MOD_ID, "textures/buttons/" + path + "main.png"));
+            button = new EditorButton(new Identifier(ParticleStudio.MOD_ID, "textures/buttons/" + path + "main.png"), description);
         }
 
         public Builder setAction(Actions action, Consumer<Routine> consumer, String description){

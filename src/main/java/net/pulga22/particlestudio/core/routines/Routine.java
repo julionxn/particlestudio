@@ -5,7 +5,7 @@ import java.util.Optional;
 
 public class Routine extends RoutineLike implements Serializable {
 
-    private int currentEditingTick = 0;
+    private transient int currentEditingTick = 0;
 
     public void insertRoutine(int startingTime, RoutineLike routineLike){
         routineLike.getTimeline().forEach((time, points) -> {

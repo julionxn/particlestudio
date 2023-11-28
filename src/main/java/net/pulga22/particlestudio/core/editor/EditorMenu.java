@@ -1,41 +1,69 @@
 package net.pulga22.particlestudio.core.editor;
 
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.util.Identifier;
 import net.pulga22.particlestudio.ParticleStudio;
 import net.pulga22.particlestudio.core.routines.Routine;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class EditorMenu {
 
     private static final Identifier ACTIVE_BUTTON_TEXTURE = of("active.png");
+    private static final Identifier BORDER_BUTTON_TEXTURE = of("border.png");
+    private static final HashMap<Actions, Identifier> OPTIONS_BORDER_TEXTURES = new HashMap<>(){{
+       put(Actions.Q, of("q_option.png"));
+       put(Actions.E, of("e_option.png"));
+       put(Actions.Z, of("z_option.png"));
+       put(Actions.C, of("c_option.png"));
+    }};
     private final List<EditorButton> buttons = new ArrayList<>();
     private int currentIndex = 0;
     private final EditorMenu previousMenu;
     private final EditorInputHandler editorInputHandler;
+    private final String menuName;
 
-    public EditorMenu(EditorMenu previousMenu, EditorInputHandler editorInputHandler){
+    public EditorMenu(EditorMenu previousMenu, EditorInputHandler editorInputHandler, String menuName){
         this.previousMenu = previousMenu;
         this.editorInputHandler = editorInputHandler;
+        this.menuName = menuName;
     }
 
-    public void render(DrawContext context){
+    public void render(DrawContext context, MinecraftClient client){
+        context.drawTextWithShadow(client.textRenderer, menuName, 6, 6, 0xffffff);
+        renderButtons(context, client);
+        renderActiveOptions(context, client);
+    }
+
+    private void renderButtons(DrawContext context, MinecraftClient client){
         int buttonsAmount = buttons.size();
-        int buttonGap = 10;
-        int buttonScale = 20;
         int x = context.getScaledWindowWidth() / 2 - ((15 * buttonsAmount) - 5);
-
-        for (int i = 0; i < buttons.size(); i++) {
-            if (i == currentIndex){
-                context.drawTexture(ACTIVE_BUTTON_TEXTURE, x - 2, 8, 0, 0, 0, 24, 24, 24, 24);
-            }
+        for (int i = 0; i < buttonsAmount; i++) {
             EditorButton currentButton = buttons.get(i);
-            context.drawTexture(currentButton.getButtonTexture(), x, 10, 0, 0, 0, buttonScale, buttonScale, buttonScale, buttonScale);
-            x += buttonGap + buttonScale;
+            context.drawTexture(currentButton.getButtonTexture(), x, 10, 0, 0, 0, 20, 20, 20, 20);
+            if (i == currentIndex){
+                context.drawCenteredTextWithShadow(client.textRenderer, currentButton.getDescription(), context.getScaledWindowWidth() / 2, 36, 0xffffff);
+                context.drawTexture(ACTIVE_BUTTON_TEXTURE, x - 2, 8, 0, 0, 0, 24, 24, 24, 24);
+            } else {
+                context.drawTexture(BORDER_BUTTON_TEXTURE, x - 2, 8, 0, 0, 0, 24, 24, 24, 24);
+            }
+            x += 30;
         }
+    }
 
+    private void renderActiveOptions(DrawContext context, MinecraftClient client){
+        EditorButton activeButton = buttons.get(currentIndex);
+        List<EditorButtonPart> parts = activeButton.getActions();
+        int y = context.getScaledWindowHeight() / 2 - ((15 * parts.size()) - 5);
+        for (EditorButtonPart part : parts) {
+            context.drawTexture(part.getTexture(), 10, y, 0, 0, 0, 20, 20, 20, 20);
+            context.drawTexture(OPTIONS_BORDER_TEXTURES.get(part.getAction()), 8, y - 2, 0, 0, 0, 28, 28, 28, 28);
+            context.drawTextWithShadow(client.textRenderer, part.getDescription(), 38, y + 5, 0xffffff);
+            y += 30;
+        }
     }
 
     public void handleKeyboardInput(int key, Routine routine){
@@ -52,7 +80,6 @@ public class EditorMenu {
 
     }
 
-    // 1.0 -> up || -1.0 -> down ||
     public void handleMouseScroll(double vertical){
         if (vertical > 0){
             if (currentIndex < buttons.size() - 1){

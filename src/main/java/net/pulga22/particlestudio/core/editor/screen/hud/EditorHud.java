@@ -22,12 +22,10 @@ public class EditorHud implements HudRenderCallback {
             client = MinecraftClient.getInstance();
             return;
         }
-
         if (player == null){
             player = client.player;
             return;
         }
-
         PlayerEntityAccessor accessor = (PlayerEntityAccessor) player;
         if (!accessor.particlestudio$isEditing()) return;
         if (playerEditor == null) playerEditor = accessor.particlestudio$getEditor();
@@ -43,7 +41,7 @@ public class EditorHud implements HudRenderCallback {
                 client.getWindow().getScaledHeight() - 32,
                 0xffffff);
 
-        playerEditor.getInputHandler().getCurrentMenu().render(drawContext);
+        playerEditor.getInputHandler().getCurrentMenu().render(drawContext, client);
 
     }
 
