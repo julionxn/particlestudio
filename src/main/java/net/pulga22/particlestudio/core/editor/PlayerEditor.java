@@ -10,17 +10,17 @@ import java.util.Set;
 
 public class PlayerEditor {
 
-    private final EditorInputHandler editorInputHandler;
+    private final EditorHandler editorHandler;
     private final HashMap<String, Routine> loadedRoutines = new HashMap<>();
     private Set<String> routineNames = new HashSet<>();
     private Routine currentRoutine = null;
 
     public PlayerEditor(PlayerEntity player){
-        this.editorInputHandler = new EditorInputHandler(this, player);
+        this.editorHandler = new EditorHandler(this, player);
     }
 
-    public EditorInputHandler getInputHandler(){
-        return editorInputHandler;
+    public EditorHandler getInputHandler(){
+        return editorHandler;
     }
 
     public void loadRoutine(String name, Routine routine){

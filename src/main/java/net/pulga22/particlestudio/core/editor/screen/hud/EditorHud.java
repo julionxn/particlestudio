@@ -38,8 +38,14 @@ public class EditorHud implements HudRenderCallback {
         drawContext.drawCenteredTextWithShadow(client.textRenderer,
                 "Tick: " + currentEditingTick + "/" + length + " (" + tickToSec(currentEditingTick) + "s:" + tickToSec(length) + "s)",
                 client.getWindow().getScaledWidth() / 2,
+                client.getWindow().getScaledHeight() - 42,
+                0xffffff);
+        drawContext.drawCenteredTextWithShadow(client.textRenderer,
+                "Seeing from " + routine.onionLowerBound() + " to " + routine.onionUpperBound(),
+                client.getWindow().getScaledWidth() / 2,
                 client.getWindow().getScaledHeight() - 32,
                 0xffffff);
+
 
         playerEditor.getInputHandler().getCurrentMenu().render(drawContext, client);
 

@@ -5,7 +5,7 @@ import net.minecraft.client.gui.DrawContext;
 import net.minecraft.util.Identifier;
 import net.pulga22.particlestudio.ParticleStudio;
 import net.pulga22.particlestudio.core.editor.Actions;
-import net.pulga22.particlestudio.core.editor.EditorInputHandler;
+import net.pulga22.particlestudio.core.editor.EditorHandler;
 import net.pulga22.particlestudio.core.routines.Routine;
 
 import java.util.ArrayList;
@@ -25,12 +25,12 @@ public class EditorMenu {
     private final List<EditorButton> buttons = new ArrayList<>();
     private int currentIndex = 0;
     private final EditorMenu previousMenu;
-    private final EditorInputHandler editorInputHandler;
+    private final EditorHandler editorHandler;
     private final String menuName;
 
-    public EditorMenu(EditorMenu previousMenu, EditorInputHandler editorInputHandler, String menuName){
+    public EditorMenu(EditorMenu previousMenu, EditorHandler editorHandler, String menuName){
         this.previousMenu = previousMenu;
-        this.editorInputHandler = editorInputHandler;
+        this.editorHandler = editorHandler;
         this.menuName = menuName;
     }
 
@@ -107,7 +107,7 @@ public class EditorMenu {
     }
 
     protected void changeToMenu(EditorMenu editorMenu){
-        editorInputHandler.changeCurrentMenu(editorMenu);
+        editorHandler.changeCurrentMenu(editorMenu);
     }
 
     protected static Identifier of(String path){
