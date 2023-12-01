@@ -7,12 +7,14 @@ import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
+import java.util.List;
 
 public class ParticleRoutinesManager {
 
-    private static final HashMap<String, ParticleType<?>> particles = new HashMap<>();
     private static ParticleRoutinesManager INSTANCE;
+    private final HashMap<String, ParticleType<?>> particles = new HashMap<>();
     private final HashMap<World, WorldRoutines> routines = new HashMap<>();
+    private int particlesAmount;
 
     public static ParticleRoutinesManager getInstance(){
         if (INSTANCE == null) INSTANCE = new ParticleRoutinesManager();
@@ -33,6 +35,25 @@ public class ParticleRoutinesManager {
         Identifier identifier = Registries.PARTICLE_TYPE.getId(particleType);
         if (identifier == null) return;
         particles.put(identifier.toString(), particleType);
+    }
+
+    public void prepareParticles(){
+        for (ParticleType<?> particleType : Registries.PARTICLE_TYPE) {
+            ParticleRoutinesManager.getInstance().registerParticle(particleType);
+        }
+        particlesAmount = particles.size();
+    }
+
+    public List<String> getAllParticleIds(){
+        return particles.keySet().stream().toList();
+    }
+
+    public int getParticlesAmount(){
+        return particlesAmount;
+    }
+
+    public ParticleType<?> getParticleType(String id){
+        return particles.get(id);
     }
 
 }

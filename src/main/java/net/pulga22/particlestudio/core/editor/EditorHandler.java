@@ -12,6 +12,7 @@ public class EditorHandler {
     private final PlayerEntity player;
     private EditorMenu currentMenu = new MainMenu(this);
     private SelectedParticleMenu subscriber;
+    private String selectedParticle = "minecraft:happy_villager";
 
     public EditorHandler(PlayerEditor playerEditor, PlayerEntity player) {
         this.playerEditor = playerEditor;
@@ -63,6 +64,14 @@ public class EditorHandler {
     private void exitEditor(){
         PlayerEntityAccessor accessor = (PlayerEntityAccessor) player;
         accessor.particlestudio$setEditing(false);
+    }
+
+    public void changeSelectedParticle(String particle){
+        selectedParticle = particle;
+    }
+
+    public String getSelectedParticle(){
+        return selectedParticle;
     }
 
     public PlayerEntity getPlayer(){

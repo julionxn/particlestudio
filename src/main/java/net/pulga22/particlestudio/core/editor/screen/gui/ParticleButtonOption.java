@@ -9,36 +9,44 @@ import net.minecraft.util.Identifier;
 import net.pulga22.particlestudio.ParticleStudio;
 
 import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
 public class ParticleButtonOption extends ClickableWidget {
 
-    private final BiConsumer<ParticleButtonOption, String> onClick;
+    private final Identifier normalButtonTexture = new Identifier(ParticleStudio.MOD_ID, "border.png");
+    private final Identifier selectedButtonTexture = new Identifier(ParticleStudio.MOD_ID, "active.png");
+    private final Consumer<ParticleButtonOption> onClick;
     private boolean selected;
-    private final String particleId;
 
-    public ParticleButtonOption(String particleId, boolean isActive, BiConsumer<ParticleButtonOption, String> onClick, int x, int y, int width, int height) {
+    public ParticleButtonOption(String particleId, boolean isActive, Consumer<ParticleButtonOption> onClick, int x, int y, int width, int height) {
         super(x, y, width, height, Text.of(particleId));
         this.selected = isActive;
-        this.particleId = particleId;
         this.onClick = onClick;
     }
 
     @Override
-    protected void renderButton(DrawContext context, int mouseX, int mouseY, float delta) {
+    public void render(DrawContext context, int mouseX, int mouseY, float delta) {
+        super.render(context, mouseX, mouseY, delta);
         MinecraftClient client = MinecraftClient.getInstance();
         if (client == null) return;
         this.drawScrollableText(context, client.textRenderer, 8, 0xffffff);
-        context.drawTexture(new Identifier(ParticleStudio.MOD_ID, "border.png"), getX(), getY(), 0, 0, 0, getWidth(), getHeight(), getWidth(), getHeight());
-        if (selected) return;
+        Identifier texture = selected ? selectedButtonTexture : normalButtonTexture;
+        context.drawTexture(texture, getX(), getY(), 0, 0, 0, getWidth(), getHeight(), getWidth(), getHeight());
+    }
+
+    @Override
+    protected void renderButton(DrawContext context, int mouseX, int mouseY, float delta) {
+
     }
 
     @Override
     public void onClick(double mouseX, double mouseY) {
         super.onClick(mouseX, mouseY);
-        onClick.accept(this, particleId);
+        onClick.accept(this);
     }
 
     public void setSelected(boolean newState){
+        if (newState) System.out.println("CHANGED TO: " + true);
         selected = newState;
     }
 
@@ -48,20 +56,20 @@ public class ParticleButtonOption extends ClickableWidget {
 
     }
 
-    public static Builder builder(String particleId, BiConsumer<ParticleButtonOption, String> onClick){
+    public static Builder builder(String particleId, Consumer<ParticleButtonOption> onClick){
         return new Builder(particleId, onClick);
     }
 
     public static class Builder {
 
         private final String particleId;
-        private final BiConsumer<ParticleButtonOption, String> onClick;
+        private final Consumer<ParticleButtonOption> onClick;
         private int width = 100;
         private int height = 20;
         private int x = 0;
         private int y = 0;
 
-        public Builder(String particleId, BiConsumer<ParticleButtonOption, String> onClick){
+        public Builder(String particleId, Consumer<ParticleButtonOption> onClick){
             this.particleId = particleId;
             this.onClick = onClick;
         }

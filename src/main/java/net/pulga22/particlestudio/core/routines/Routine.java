@@ -67,10 +67,6 @@ public class Routine implements Serializable {
         return onionUpperBound;
     }
 
-    public void changeSelectedParticle(String particle){
-        selectedParticle = particle;
-    }
-
     public void addParticlePoint(EditorHandler editorHandler){
         PlayerEntity player = editorHandler.getPlayer();
         if (player == null) return;

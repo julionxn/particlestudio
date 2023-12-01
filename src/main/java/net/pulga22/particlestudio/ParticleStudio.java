@@ -4,7 +4,6 @@ import net.fabricmc.api.ModInitializer;
 
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
-import net.minecraft.particle.ParticleType;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
@@ -34,9 +33,7 @@ public class ParticleStudio implements ModInitializer {
 			ParticleRoutinesManager.getInstance().loadWorld(world, new WorldRoutines());
 		});
 
-		for (ParticleType<?> particleType : Registries.PARTICLE_TYPE) {
-			ParticleRoutinesManager.getInstance().registerParticle(particleType);
-		}
+		ParticleRoutinesManager.getInstance().prepareParticles();
 
 		LOGGER.info("Hello Fabric world!");
 	}
