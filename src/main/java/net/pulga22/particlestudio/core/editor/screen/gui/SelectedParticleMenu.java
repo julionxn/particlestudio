@@ -1,25 +1,18 @@
 package net.pulga22.particlestudio.core.editor.screen.gui;
 
-import net.fabricmc.fabric.impl.client.particle.ParticleFactoryRegistryImpl;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
-import net.minecraft.client.particle.ParticleFactory;
-import net.minecraft.client.particle.ParticleManager;
-import net.minecraft.client.texture.Sprite;
 import net.minecraft.client.util.Window;
-import net.minecraft.particle.DefaultParticleType;
-import net.minecraft.particle.ParticleType;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.pulga22.particlestudio.ParticleStudio;
 import net.pulga22.particlestudio.core.editor.EditorHandler;
 import net.pulga22.particlestudio.core.editor.ScrollSubscriber;
-import net.pulga22.particlestudio.core.routines.ParticleRoutinesManager;
+import net.pulga22.particlestudio.core.routines.managers.ParticleRoutinesManager;
 
 import java.util.List;
-import java.util.Optional;
 
 public class SelectedParticleMenu extends Screen implements ScrollSubscriber {
 

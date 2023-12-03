@@ -1,4 +1,4 @@
-package net.pulga22.particlestudio.core.routines;
+package net.pulga22.particlestudio.core.routines.managers;
 
 import net.minecraft.particle.ParticleType;
 import net.minecraft.registry.Registries;

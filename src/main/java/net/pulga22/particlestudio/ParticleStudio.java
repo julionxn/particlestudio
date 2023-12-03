@@ -9,8 +9,8 @@ import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
 import net.pulga22.particlestudio.items.ParticleController;
 import net.pulga22.particlestudio.networking.AllPackets;
-import net.pulga22.particlestudio.core.routines.ParticleRoutinesManager;
-import net.pulga22.particlestudio.core.routines.WorldRoutines;
+import net.pulga22.particlestudio.core.routines.managers.ParticleRoutinesManager;
+import net.pulga22.particlestudio.core.routines.managers.WorldRoutines;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

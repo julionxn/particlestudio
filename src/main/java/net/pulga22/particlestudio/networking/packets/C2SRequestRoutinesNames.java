@@ -7,8 +7,8 @@ import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.pulga22.particlestudio.core.routines.ParticleRoutinesManager;
-import net.pulga22.particlestudio.core.routines.WorldRoutines;
+import net.pulga22.particlestudio.core.routines.managers.ParticleRoutinesManager;
+import net.pulga22.particlestudio.core.routines.managers.WorldRoutines;
 import net.pulga22.particlestudio.networking.AllPackets;
 
 import java.util.Set;

@@ -11,6 +11,7 @@ import net.minecraft.util.math.RotationAxis;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.pulga22.particlestudio.ParticleStudio;
+import net.pulga22.particlestudio.core.routines.managers.ParticleRoutinesManager;
 import org.joml.Matrix4f;
 import org.lwjgl.opengl.GL11;
 

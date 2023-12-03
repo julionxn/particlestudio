@@ -71,8 +71,17 @@ public class Routine implements Serializable {
         return onionUpperBound;
     }
 
-    public void renderPreview(WorldRenderContext context){
+    public void render(WorldRenderContext context){
         if (timeline.isEmpty() || isPlaying()) return;
+        renderPoints(context);
+        renderLinePaths(context);
+    }
+
+    private void renderLinePaths(WorldRenderContext context){
+
+    }
+
+    private void renderPoints(WorldRenderContext context){
         for (int i = onionLowerBound; i <= onionUpperBound; i++) {
             List<ParticlePoint> points = timeline.get(i);
             points.forEach(particlePoint -> {

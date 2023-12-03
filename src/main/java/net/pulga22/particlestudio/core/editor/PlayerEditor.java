@@ -38,7 +38,7 @@ public class PlayerEditor {
         currentRoutine = routine;
     }
 
-    public void addNewRoutine(String name){
+    public void createRoutine(String name){
         if (routineNames.contains(name)) return;
         loadRoutine(name, new Routine());
         routineNames.add(name);

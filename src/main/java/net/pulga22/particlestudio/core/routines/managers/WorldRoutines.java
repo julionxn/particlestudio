@@ -1,4 +1,6 @@
-package net.pulga22.particlestudio.core.routines;
+package net.pulga22.particlestudio.core.routines.managers;
+
+import net.pulga22.particlestudio.core.routines.Routine;
 
 import java.io.Serializable;
 import java.util.HashMap;

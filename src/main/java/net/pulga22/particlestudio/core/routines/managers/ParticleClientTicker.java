@@ -1,6 +1,7 @@
-package net.pulga22.particlestudio.core.routines;
+package net.pulga22.particlestudio.core.routines.managers;
 
 import net.minecraft.world.World;
+import net.pulga22.particlestudio.core.routines.RoutinePlayer;
 
 import java.util.HashSet;
 import java.util.Set;

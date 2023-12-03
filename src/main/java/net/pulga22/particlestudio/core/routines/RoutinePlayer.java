@@ -1,6 +1,7 @@
 package net.pulga22.particlestudio.core.routines;
 
 import net.minecraft.world.World;
+import net.pulga22.particlestudio.core.routines.managers.ParticleClientTicker;
 
 import java.util.List;
 
