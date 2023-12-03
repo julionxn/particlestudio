@@ -17,6 +17,9 @@ public class MainMenu extends EditorMenu {
                 .setAction(Actions.Q,
                         routine -> editorHandler.changeCurrentMenu(new ToolsMenu(this, editorHandler)),
                         "Entrar").build());
+        addButton(EditorButton.builder("main_menu", "Play")
+                .setAction(Actions.Q,
+                        routine -> System.out.println("XD"), "Empezar").build());
     }
 
 }

@@ -31,7 +31,7 @@ public abstract class KeyboardMixin {
         PlayerEntityAccessor accessor = (PlayerEntityAccessor) player;
         if (!accessor.particlestudio$isEditing()) return;
         if (!keysToHandle.contains(key) || action != 1) return;
-        accessor.particlestudio$getEditor().getInputHandler().handleKeyboard(key);
+        accessor.particlestudio$getEditor().getHandler().handleKeyboard(key);
     }
 
 }

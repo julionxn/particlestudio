@@ -11,7 +11,7 @@ public class EditorHandler {
     private final PlayerEditor playerEditor;
     private final PlayerEntity player;
     private EditorMenu currentMenu = new MainMenu(this);
-    private SelectedParticleMenu subscriber;
+    private ScrollSubscriber subscriber;
     private String selectedParticle = "minecraft:happy_villager";
 
     public EditorHandler(PlayerEditor playerEditor, PlayerEntity player) {
@@ -23,18 +23,18 @@ public class EditorHandler {
         playerEditor.getCurrentRoutine().ifPresent(routine -> currentMenu.handleRightClick(routine));
     }
 
-    public void subscribeToScroll(SelectedParticleMenu menu){
-        subscriber = menu;
+    public void subscribeToScroll(ScrollSubscriber subscriber){
+        this.subscriber = subscriber;
     }
 
-    public void unsubscribeToScroll(SelectedParticleMenu menu){
+    public void unsubscribeToScroll(ScrollSubscriber menu){
         if (subscriber != menu) return;
         subscriber = null;
     }
 
     public void handleMouseScroll(double vertical){
         if (subscriber != null) {
-            subscriber.handleMouseScroll(vertical);
+            subscriber.handleScroll(vertical);
             return;
         }
         currentMenu.handleMouseScroll(vertical);

@@ -23,7 +23,7 @@ public abstract class MouseHandlerMixin {
         PlayerEntityAccessor accessor = (PlayerEntityAccessor) player;
         if (!accessor.particlestudio$isEditing()) return;
         if (window == client.getWindow().getHandle()){
-            accessor.particlestudio$getEditor().getInputHandler().handleMouseScroll(vertical);
+            accessor.particlestudio$getEditor().getHandler().handleMouseScroll(vertical);
         }
         ci.cancel();
     }
@@ -35,7 +35,7 @@ public abstract class MouseHandlerMixin {
         if (player == null) return;
         PlayerEntityAccessor accessor = (PlayerEntityAccessor) player;
         if (!accessor.particlestudio$isEditing()) return;
-        accessor.particlestudio$getEditor().getInputHandler().handleRightClick();
+        accessor.particlestudio$getEditor().getHandler().handleRightClick();
     }
 
 }

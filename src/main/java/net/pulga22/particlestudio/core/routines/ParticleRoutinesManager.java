@@ -6,13 +6,16 @@ import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 
 public class ParticleRoutinesManager {
 
     private static ParticleRoutinesManager INSTANCE;
     private final HashMap<String, ParticleType<?>> particles = new HashMap<>();
+    private final List<String> particlesIds = new ArrayList<>();
     private final HashMap<World, WorldRoutines> routines = new HashMap<>();
     private int particlesAmount;
 
@@ -42,18 +45,20 @@ public class ParticleRoutinesManager {
             ParticleRoutinesManager.getInstance().registerParticle(particleType);
         }
         particlesAmount = particles.size();
+        particlesIds.addAll(particles.keySet().stream().sorted().toList());
     }
 
     public List<String> getAllParticleIds(){
-        return particles.keySet().stream().toList();
+        return particlesIds;
     }
 
     public int getParticlesAmount(){
         return particlesAmount;
     }
 
-    public ParticleType<?> getParticleType(String id){
-        return particles.get(id);
+    public Optional<ParticleType<?>> getParticleType(String id){
+        if (particles.containsKey(id)) return Optional.of(particles.get(id));
+        return Optional.empty();
     }
 
 }

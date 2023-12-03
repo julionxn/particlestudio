@@ -1,12 +1,12 @@
 package net.pulga22.particlestudio.core.routines;
 
+import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.Vec3d;
 import net.pulga22.particlestudio.core.editor.EditorHandler;
 
 import java.io.*;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
@@ -15,10 +15,9 @@ public class Routine implements Serializable {
     private int displayLength;
     private int actualLength;
     private transient int currentEditingTick;
-    private final HashMap<Integer, List<ParticlePoint>> timeline = new HashMap<>();
+    private final List<List<ParticlePoint>> timeline = new ArrayList<>();
     private transient int onionLowerBound;
     private transient int onionUpperBound;
-    private String selectedParticle = "minecraft:end_rod";
 
     public void adjustFrame(int in){
         if (in == 0) return;
@@ -55,8 +54,12 @@ public class Routine implements Serializable {
         return currentEditingTick;
     }
 
-    public int length(){
+    public int displayLength(){
         return displayLength;
+    }
+
+    public int length() {
+        return actualLength;
     }
 
     public int onionLowerBound(){
@@ -67,19 +70,36 @@ public class Routine implements Serializable {
         return onionUpperBound;
     }
 
+    public void renderPreview(WorldRenderContext context){
+        if (timeline.isEmpty()) return;
+        for (int i = onionLowerBound; i <= onionUpperBound; i++) {
+            List<ParticlePoint> points = timeline.get(i);
+            points.forEach(particlePoint -> {
+                particlePoint.renderPreview(context);
+            });
+        }
+    }
+
     public void addParticlePoint(EditorHandler editorHandler){
         PlayerEntity player = editorHandler.getPlayer();
         if (player == null) return;
         Vec3d pos = player.getPos();
-        addParticlePoint(currentEditingTick, new ParticlePoint(selectedParticle, pos.x, pos.y, pos.z));
+        addParticlePoint(currentEditingTick, new ParticlePoint(editorHandler.getSelectedParticle(), pos.x, pos.y, pos.z));
     }
 
     public void addParticlePoint(int time, ParticlePoint particlePoint){
-        timeline.computeIfAbsent(time, k -> new ArrayList<>());
-        timeline.get(time).add(particlePoint);
+        while (timeline.size() <= time) {
+            timeline.add(new ArrayList<>());
+        }
+        List<ParticlePoint> particleList = timeline.get(time);
+        particleList.add(particlePoint);
         if (time > actualLength) {
             actualLength = time;
             displayLength = time;
+        }
+        if (time == displayLength){
+            adjustFrame(1);
+            adjustOnionUpperBound(1);
         }
     }
 

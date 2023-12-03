@@ -33,7 +33,7 @@ public class EditorHud implements HudRenderCallback {
         if (routineOptional.isEmpty()) return;
         Routine routine = routineOptional.get();
 
-        int length = routine.length();
+        int length = routine.displayLength();
         int currentEditingTick = routine.getCurrentEditingTick();
         drawContext.drawCenteredTextWithShadow(client.textRenderer,
                 "Tick: " + currentEditingTick + "/" + length + " (" + tickToSec(currentEditingTick) + "s:" + tickToSec(length) + "s)",
@@ -47,7 +47,7 @@ public class EditorHud implements HudRenderCallback {
                 0xffffff);
 
 
-        playerEditor.getInputHandler().getCurrentMenu().render(drawContext, client);
+        playerEditor.getHandler().getCurrentMenu().render(drawContext, client);
 
     }
 

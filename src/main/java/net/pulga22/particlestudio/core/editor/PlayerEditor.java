@@ -19,7 +19,7 @@ public class PlayerEditor {
         this.editorHandler = new EditorHandler(this, player);
     }
 
-    public EditorHandler getInputHandler(){
+    public EditorHandler getHandler(){
         return editorHandler;
     }
 
