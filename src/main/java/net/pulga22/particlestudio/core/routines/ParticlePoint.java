@@ -4,14 +4,18 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.minecraft.client.render.*;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.particle.ParticleEffect;
+import net.minecraft.particle.ParticleType;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.RotationAxis;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.World;
 import net.pulga22.particlestudio.ParticleStudio;
 import org.joml.Matrix4f;
 import org.lwjgl.opengl.GL11;
 
 import java.io.Serializable;
+import java.util.Optional;
 
 public class ParticlePoint implements Serializable {
 
@@ -25,8 +29,11 @@ public class ParticlePoint implements Serializable {
         this.particleType = particleType;
     }
 
-    public void spawnParticle(){
-        System.out.println("Spawn");
+    public void spawnParticle(World world){
+        Optional<ParticleType<?>> particleTypeOptional = ParticleRoutinesManager.getInstance().getParticleType(particleType);
+        particleTypeOptional.ifPresent(particle -> {
+            world.addParticle((ParticleEffect) particle, position[0], position[1], position[2], 0, 0, 0);
+        });
     }
 
     public void renderPreview(WorldRenderContext context){

@@ -21,9 +21,8 @@ public class EditorButton {
         this.description = description;
     }
 
-    public EditorButton setAction(Actions action, Identifier texture, Consumer<Routine> consumer, String description){
+    public void setAction(Actions action, Identifier texture, Consumer<Routine> consumer, String description){
         actions.put(action, new EditorButtonPart(action, texture, consumer, description));
-        return this;
     }
 
     public void perform(Actions action, Routine routine){

@@ -29,31 +29,11 @@ public class EditorHud implements HudRenderCallback {
         PlayerEntityAccessor accessor = (PlayerEntityAccessor) player;
         if (!accessor.particlestudio$isEditing()) return;
         if (playerEditor == null) playerEditor = accessor.particlestudio$getEditor();
-        Optional<Routine> routineOptional = playerEditor.getCurrentRoutine();
-        if (routineOptional.isEmpty()) return;
-        Routine routine = routineOptional.get();
 
-        int length = routine.displayLength();
-        int currentEditingTick = routine.getCurrentEditingTick();
-        drawContext.drawCenteredTextWithShadow(client.textRenderer,
-                "Tick: " + currentEditingTick + "/" + length + " (" + tickToSec(currentEditingTick) + "s:" + tickToSec(length) + "s)",
-                client.getWindow().getScaledWidth() / 2,
-                client.getWindow().getScaledHeight() - 42,
-                0xffffff);
-        drawContext.drawCenteredTextWithShadow(client.textRenderer,
-                "Seeing from " + routine.onionLowerBound() + " to " + routine.onionUpperBound(),
-                client.getWindow().getScaledWidth() / 2,
-                client.getWindow().getScaledHeight() - 32,
-                0xffffff);
-
-
-        playerEditor.getHandler().getCurrentMenu().render(drawContext, client);
+        playerEditor.render(drawContext, client);
 
     }
 
-    private String tickToSec(int tick){
-        float secs = tick / 20f;
-        return String.format("%.2f", secs);
-    }
+
 
 }

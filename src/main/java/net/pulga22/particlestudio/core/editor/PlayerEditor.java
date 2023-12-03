@@ -1,5 +1,7 @@
 package net.pulga22.particlestudio.core.editor;
 
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.entity.player.PlayerEntity;
 import net.pulga22.particlestudio.core.routines.Routine;
 
@@ -52,6 +54,11 @@ public class PlayerEditor {
 
     public Set<String> getRoutineNames(){
         return routineNames;
+    }
+
+    public void render(DrawContext context, MinecraftClient client){
+        if (currentRoutine == null) return;
+        editorHandler.getCurrentMenu().render(context, client, currentRoutine);
     }
 
 }

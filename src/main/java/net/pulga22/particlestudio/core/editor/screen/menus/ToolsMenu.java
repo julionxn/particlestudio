@@ -11,13 +11,13 @@ public class ToolsMenu extends EditorMenu {
 
     public ToolsMenu(EditorMenu previousMenu, EditorHandler editorHandler) {
         super(previousMenu, editorHandler, "Tools");
-        addButton(EditorButton.builder("tools", "Puntos")
+        addButton(EditorButton.builder("tools/points", "Puntos")
                 .setAction(Actions.Q, routine -> routine.addParticlePoint(editorHandler), "Añadir").build());
-        addButton(EditorButton.builder("tools", "Lineas")
+        addButton(EditorButton.builder("tools/lines", "Lineas")
                 .setAction(Actions.Q, routine -> System.out.println("TODO"), "Primer punto")
                 .setAction(Actions.E, routine -> System.out.println("TODO"), "Segundo punto")
                 .setAction(Actions.Z, routine -> System.out.println("TODO"), "Confirmar").build());
-        addButton(EditorButton.builder("tools", "Partículas")
+        addButton(EditorButton.builder("tools/particles", "Partículas")
                 .setAction(Actions.Q, routine -> {
                     MinecraftClient client = MinecraftClient.getInstance();
                     if (client == null) return;

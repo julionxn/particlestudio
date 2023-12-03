@@ -34,10 +34,31 @@ public class EditorMenu {
         this.menuName = menuName;
     }
 
-    public void render(DrawContext context, MinecraftClient client){
+    public void render(DrawContext context, MinecraftClient client, Routine currentRoutine){
         context.drawTextWithShadow(client.textRenderer, menuName, 6, 6, 0xffffff);
+        renderTickInfo(context, client, currentRoutine);
         renderButtons(context, client);
         renderActiveOptions(context, client);
+    }
+
+    private void renderTickInfo(DrawContext context, MinecraftClient client, Routine currentRoutine){
+        int length = currentRoutine.displayLength();
+        int currentEditingTick = currentRoutine.getCurrentEditingTick();
+        context.drawCenteredTextWithShadow(client.textRenderer,
+                "Tick: " + currentEditingTick + "/" + length + " (" + tickToSec(currentEditingTick) + "s:" + tickToSec(length) + "s)",
+                client.getWindow().getScaledWidth() / 2,
+                client.getWindow().getScaledHeight() - 42,
+                0xffffff);
+        context.drawCenteredTextWithShadow(client.textRenderer,
+                "Seeing from " + currentRoutine.onionLowerBound() + " to " + currentRoutine.onionUpperBound(),
+                client.getWindow().getScaledWidth() / 2,
+                client.getWindow().getScaledHeight() - 32,
+                0xffffff);
+    }
+
+    private String tickToSec(int tick){
+        float secs = tick / 20f;
+        return String.format("%.2f", secs);
     }
 
     private void renderButtons(DrawContext context, MinecraftClient client){
@@ -106,12 +127,12 @@ public class EditorMenu {
         return previousMenu;
     }
 
-    protected void changeToMenu(EditorMenu editorMenu){
-        editorHandler.changeCurrentMenu(editorMenu);
-    }
-
     protected static Identifier of(String path){
         return new Identifier(ParticleStudio.MOD_ID, path);
+    }
+
+    public void onExit(Routine routine){
+
     }
 
 }

@@ -9,17 +9,18 @@ public class MainMenu extends EditorMenu {
 
     public MainMenu(EditorHandler editorHandler) {
         super(null, editorHandler, "Menú principal");
-        addButton(EditorButton.builder("main_menu", "Timeline")
+        addButton(EditorButton.builder("timeline", "Timeline")
                 .setAction(Actions.Q,
-                        routine -> editorHandler.changeCurrentMenu(new TimelineMenu(this, editorHandler)),
+                        routine -> editorHandler.changeCurrentMenu(new TimelineMenu(this, editorHandler), routine),
                         "Entrar").build());
-        addButton(EditorButton.builder("main_menu", "Herramientas")
+        addButton(EditorButton.builder("tools", "Herramientas")
                 .setAction(Actions.Q,
-                        routine -> editorHandler.changeCurrentMenu(new ToolsMenu(this, editorHandler)),
+                        routine -> editorHandler.changeCurrentMenu(new ToolsMenu(this, editorHandler), routine),
                         "Entrar").build());
-        addButton(EditorButton.builder("main_menu", "Play")
+        addButton(EditorButton.builder("play", "Play")
                 .setAction(Actions.Q,
-                        routine -> System.out.println("XD"), "Empezar").build());
+                        routine -> editorHandler.changeCurrentMenu(new PlayMenu(this, editorHandler), routine),
+                        "Play").build());
     }
 
 }

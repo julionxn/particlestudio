@@ -2,9 +2,11 @@ package net.pulga22.particlestudio.core.editor;
 
 import net.minecraft.entity.player.PlayerEntity;
 import net.pulga22.particlestudio.core.editor.components.EditorMenu;
-import net.pulga22.particlestudio.core.editor.screen.gui.SelectedParticleMenu;
 import net.pulga22.particlestudio.core.editor.screen.menus.MainMenu;
+import net.pulga22.particlestudio.core.routines.Routine;
 import net.pulga22.particlestudio.utils.mixins.PlayerEntityAccessor;
+
+import java.util.Optional;
 
 public class EditorHandler {
 
@@ -41,10 +43,11 @@ public class EditorHandler {
     }
 
     public void handleKeyboard(int key){
+        Optional<Routine> routineOptional = playerEditor.getCurrentRoutine();
         if (key == 256){
             EditorMenu prevMenu = currentMenu.getPreviousMenu();
             if (prevMenu != null){
-                currentMenu = currentMenu.getPreviousMenu();
+                routineOptional.ifPresent(routine -> changeCurrentMenu(prevMenu, routine));
             } else {
                 exitEditor();
             }
@@ -78,12 +81,12 @@ public class EditorHandler {
         return player;
     }
 
-
     public EditorMenu getCurrentMenu(){
         return currentMenu;
     }
 
-    public void changeCurrentMenu(EditorMenu menu){
+    public void changeCurrentMenu(EditorMenu menu, Routine routine){
+        currentMenu.onExit(routine);
         this.currentMenu = menu;
     }
 
