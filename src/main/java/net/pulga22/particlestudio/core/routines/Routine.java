@@ -4,95 +4,50 @@ import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.Vec3d;
 import net.pulga22.particlestudio.core.editor.EditorHandler;
+import net.pulga22.particlestudio.core.editor.SelectionCalculator;
+import net.pulga22.particlestudio.core.routines.paths.Path;
 
 import java.io.*;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 public class Routine implements Serializable {
 
-    private final List<List<ParticlePoint>> timeline = new ArrayList<>();
-    private int displayLength;
-    private int actualLength;
-    private transient int currentEditingTick;
-    private transient int onionLowerBound;
-    private transient int onionUpperBound;
+    private final Timeline timeline = new Timeline();
     private transient RoutinePlayer routinePlayer;
+    private transient Path editingPath;
 
-    public void adjustFrame(int in){
-        if (in == 0) return;
-        if (in < 0) { decreaseFrame(in); return; }
-        increaseFrame(in);
+    public Timeline getTimeline(){
+        return timeline;
     }
 
-    private void decreaseFrame(int in){
-        if (currentEditingTick - in < 0 || displayLength - in < actualLength) return;
-        displayLength -= in;
-        currentEditingTick -= in;
-    }
-
-    private void increaseFrame(int in){
-        displayLength += in;
-        currentEditingTick += in;
-    }
-
-    public void adjustOnionUpperBound(int in){
-        if (in == 0) return;
-        int newBound = onionUpperBound + in;
-        if (newBound > actualLength || newBound <= onionLowerBound) return;
-        onionUpperBound += in;
-    }
-
-    public void adjustOnionLowerBound(int in){
-        if (in == 0) return;
-        int newBound = onionLowerBound + in;
-        if (newBound < 0 || newBound >= onionUpperBound) return;
-        onionLowerBound += in;
-    }
-
-    public int getCurrentEditingTick(){
-        return currentEditingTick;
-    }
-
-    public int displayLength(){
-        return displayLength;
-    }
-
-    public int length() {
-        return actualLength;
-    }
-
-    public int onionLowerBound(){
-        return onionLowerBound;
-    }
-
-    public int onionUpperBound(){
-        return onionUpperBound;
-    }
-
-    public void render(WorldRenderContext context){
+    public void render(WorldRenderContext context, List<ParticlePoint> selectedPoints){
         if (timeline.isEmpty() || isPlaying()) return;
-        renderPoints(context);
-        renderLinePaths(context);
+        renderPoints(context, selectedPoints);
+        renderPaths(context);
     }
 
-    private void renderLinePaths(WorldRenderContext context){
-
+    private void renderPaths(WorldRenderContext context){
+        if (editingPath == null) return;
+        editingPath.render(context);
     }
 
-    private void renderPoints(WorldRenderContext context){
-        for (int i = onionLowerBound; i <= onionUpperBound; i++) {
-            List<ParticlePoint> points = timeline.get(i);
+    private void renderPoints(WorldRenderContext context, List<ParticlePoint> selectedPoints){
+        for (int i = timeline.onionLowerBound(); i <= timeline.onionUpperBound(); i++) {
+            List<ParticlePoint> points = timeline.getPointsOfTick(i);
             points.forEach(particlePoint -> {
-                particlePoint.renderPreview(context);
+                if (selectedPoints.contains(particlePoint)){
+                    PointRenderer.renderSelectedPoint(context, particlePoint.getPosition());
+                    return;
+                }
+                PointRenderer.renderParticlePoint(context, particlePoint.getPosition());
             });
         }
     }
 
     public void play(){
         if (routinePlayer == null || routinePlayer.length() != timeline.size()) {
-            routinePlayer = new RoutinePlayer(timeline);
+            routinePlayer = new RoutinePlayer(timeline.getPoints());
         }
         if (routinePlayer.isPlaying()) return;
         routinePlayer.play();
@@ -126,24 +81,42 @@ public class Routine implements Serializable {
         PlayerEntity player = editorHandler.getPlayer();
         if (player == null) return;
         Vec3d pos = player.getPos();
-        addParticlePoint(currentEditingTick, new ParticlePoint(editorHandler.getSelectedParticle(), pos.x, pos.y, pos.z));
+        addParticlePoint(timeline.getCurrentEditingTick(), new ParticlePoint(editorHandler.getSelectedParticle(), pos.x, pos.y, pos.z));
     }
 
     public void addParticlePoint(int time, ParticlePoint particlePoint){
         if (routinePlayer != null && routinePlayer.isPlaying()) stop();
-        while (timeline.size() <= time) {
-            timeline.add(new ArrayList<>());
+        timeline.addParticlePoint(time, particlePoint);
+    }
+
+    public void newPath(Path path){
+        editingPath = path;
+    }
+
+    public Path getEditingPath(){
+        return editingPath;
+    }
+
+    //Yaw: Horizontal || Pitch: Vertical
+    //mods: 0 normal || 1 shift || 2 control
+    public Optional<ParticlePoint> tryToSelectPoint(PlayerEntity player, int mods) {
+        if (timeline.isEmpty()) return Optional.empty();
+        Vec3d pos = player.getPos().add(0, 1.5, 0);
+        double pitch = clampAngle(Math.toRadians(player.getPitch() + 90));
+        double yaw = clampAngle(Math.toRadians(player.getHeadYaw() + 90));
+        return new SelectionCalculator(timeline.getPoints().subList(timeline.onionLowerBound(),
+                timeline.onionUpperBound() + 1),
+                pos, yaw, pitch).getSelectedPoint();
+    }
+
+    private double clampAngle(double angle) {
+        angle = angle % (2 * Math.PI);
+        if (angle > Math.PI) {
+            angle -= 2 * Math.PI;
+        } else if (angle < -Math.PI) {
+            angle += 2 * Math.PI;
         }
-        List<ParticlePoint> particleList = timeline.get(time);
-        particleList.add(particlePoint);
-        if (time > actualLength) {
-            actualLength = time;
-            displayLength = time;
-        }
-        if (time == displayLength){
-            adjustFrame(1);
-            adjustOnionUpperBound(1);
-        }
+        return angle;
     }
 
     public static Optional<byte[]> serialize(Routine routine){
@@ -164,5 +137,4 @@ public class Routine implements Serializable {
             return Optional.empty();
         }
     }
-
 }

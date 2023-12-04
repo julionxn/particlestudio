@@ -7,6 +7,7 @@ import net.pulga22.particlestudio.ParticleStudio;
 import net.pulga22.particlestudio.core.editor.Actions;
 import net.pulga22.particlestudio.core.editor.EditorHandler;
 import net.pulga22.particlestudio.core.routines.Routine;
+import net.pulga22.particlestudio.core.routines.Timeline;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -42,15 +43,16 @@ public class EditorMenu {
     }
 
     private void renderTickInfo(DrawContext context, MinecraftClient client, Routine currentRoutine){
-        int length = currentRoutine.displayLength();
-        int currentEditingTick = currentRoutine.getCurrentEditingTick();
+        Timeline timeline = currentRoutine.getTimeline();
+        int length = timeline.displayLength();
+        int currentEditingTick = timeline.getCurrentEditingTick();
         context.drawCenteredTextWithShadow(client.textRenderer,
                 "Tick: " + currentEditingTick + "/" + length + " (" + tickToSec(currentEditingTick) + "s:" + tickToSec(length) + "s)",
                 client.getWindow().getScaledWidth() / 2,
                 client.getWindow().getScaledHeight() - 42,
                 0xffffff);
         context.drawCenteredTextWithShadow(client.textRenderer,
-                "Seeing from " + currentRoutine.onionLowerBound() + " to " + currentRoutine.onionUpperBound(),
+                "Seeing from " + timeline.onionLowerBound() + " to " + timeline.onionUpperBound(),
                 client.getWindow().getScaledWidth() / 2,
                 client.getWindow().getScaledHeight() - 32,
                 0xffffff);
@@ -79,9 +81,9 @@ public class EditorMenu {
 
     private void renderActiveOptions(DrawContext context, MinecraftClient client){
         EditorButton activeButton = buttons.get(currentIndex);
-        List<EditorButtonPart> parts = activeButton.getActions();
+        List<EditorButtonAction> parts = activeButton.getActions();
         int y = context.getScaledWindowHeight() / 2 - ((15 * parts.size()) - 5);
-        for (EditorButtonPart part : parts) {
+        for (EditorButtonAction part : parts) {
             context.drawTexture(part.getTexture(), 10, y, 0, 0, 0, 20, 20, 20, 20);
             context.drawTexture(OPTIONS_BORDER_TEXTURES.get(part.getAction()), 8, y - 2, 0, 0, 0, 28, 28, 28, 28);
             context.drawTextWithShadow(client.textRenderer, part.getDescription(), 38, y + 5, 0xffffff);

@@ -14,7 +14,7 @@ public class EditorButton {
 
     private final Identifier buttonTexture;
     private final String description;
-    private final HashMap<Actions, EditorButtonPart> actions = new HashMap<>();
+    private final HashMap<Actions, EditorButtonAction> actions = new HashMap<>();
 
     public EditorButton(Identifier buttonTexture, String description){
         this.buttonTexture = buttonTexture;
@@ -22,7 +22,7 @@ public class EditorButton {
     }
 
     public void setAction(Actions action, Identifier texture, Consumer<Routine> consumer, String description){
-        actions.put(action, new EditorButtonPart(action, texture, consumer, description));
+        actions.put(action, new EditorButtonAction(action, texture, consumer, description));
     }
 
     public void perform(Actions action, Routine routine){
@@ -30,8 +30,8 @@ public class EditorButton {
         actions.get(action).perform(routine);
     }
 
-    public List<EditorButtonPart> getActions(){
-        List<EditorButtonPart> buttonParts = new ArrayList<>();
+    public List<EditorButtonAction> getActions(){
+        List<EditorButtonAction> buttonParts = new ArrayList<>();
         for (Actions action : Actions.values()){
             if (actions.containsKey(action)) buttonParts.add(actions.get(action));
         }

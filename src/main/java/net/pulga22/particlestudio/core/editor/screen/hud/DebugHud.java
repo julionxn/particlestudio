@@ -5,6 +5,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.entity.player.PlayerEntity;
 import net.pulga22.particlestudio.core.editor.PlayerEditor;
+import net.pulga22.particlestudio.core.routines.Timeline;
 import net.pulga22.particlestudio.utils.mixins.PlayerEntityAccessor;
 
 public class DebugHud implements HudRenderCallback {
@@ -18,11 +19,12 @@ public class DebugHud implements HudRenderCallback {
         PlayerEntityAccessor accessor = (PlayerEntityAccessor) entity;
         PlayerEditor editor = accessor.particlestudio$getEditor();
         editor.getCurrentRoutine().ifPresent(routine -> {
-            drawText(context, client, "CURRENTEDIT: " + routine.getCurrentEditingTick(), 0);
-            drawText(context, client, "DISPLAY: " + routine.displayLength(), 20);
-            drawText(context, client, "ACTUAL: " + routine.length(), 40);
-            drawText(context, client, "LOWER: " + routine.onionLowerBound(), 60);
-            drawText(context, client, "UPPER: " + routine.onionUpperBound(), 80);
+            Timeline timeline = routine.getTimeline();
+            drawText(context, client, "CURRENTEDIT: " + timeline.getCurrentEditingTick(), 0);
+            drawText(context, client, "DISPLAY: " + timeline.displayLength(), 20);
+            drawText(context, client, "ACTUAL: " + timeline.length(), 40);
+            drawText(context, client, "LOWER: " + timeline.onionLowerBound(), 60);
+            drawText(context, client, "UPPER: " + timeline.onionUpperBound(), 80);
         });
     }
 

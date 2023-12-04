@@ -3,9 +3,13 @@ package net.pulga22.particlestudio.core.editor;
 import net.minecraft.entity.player.PlayerEntity;
 import net.pulga22.particlestudio.core.editor.components.EditorMenu;
 import net.pulga22.particlestudio.core.editor.screen.menus.MainMenu;
+import net.pulga22.particlestudio.core.editor.screen.menus.PointMenu;
+import net.pulga22.particlestudio.core.routines.ParticlePoint;
 import net.pulga22.particlestudio.core.routines.Routine;
 import net.pulga22.particlestudio.utils.mixins.PlayerEntityAccessor;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 public class EditorHandler {
@@ -15,23 +19,34 @@ public class EditorHandler {
     private EditorMenu currentMenu = new MainMenu(this);
     private ScrollSubscriber subscriber;
     private String selectedParticle = "minecraft:happy_villager";
+    private final List<ParticlePoint> selectedPoints = new ArrayList<>();
 
     public EditorHandler(PlayerEditor playerEditor, PlayerEntity player) {
         this.playerEditor = playerEditor;
         this.player = player;
     }
 
-    public void handleRightClick(){
-        playerEditor.getCurrentRoutine().ifPresent(routine -> currentMenu.handleRightClick(routine));
-    }
-
-    public void subscribeToScroll(ScrollSubscriber subscriber){
-        this.subscriber = subscriber;
-    }
-
-    public void unsubscribeToScroll(ScrollSubscriber menu){
-        if (subscriber != menu) return;
-        subscriber = null;
+    public void handleRightClick(PlayerEntity player, int mods){
+        playerEditor.getCurrentRoutine().ifPresent(routine -> {
+            currentMenu.handleRightClick(routine);
+            routine.tryToSelectPoint(player, mods).ifPresent(particlePoint -> {
+                if (selectedPoints.contains(particlePoint)){
+                    selectedPoints.remove(particlePoint);
+                    if (selectedPoints.isEmpty()) handleKeyboard(256);
+                    return;
+                }
+                if (selectedPoints.isEmpty()) {
+                    changeCurrentMenu(new PointMenu(currentMenu, this), routine);
+                }
+                switch (mods){
+                    case 0 -> {
+                        selectedPoints.clear();
+                        selectedPoints.add(particlePoint);
+                    }
+                    case 1, 2 -> selectedPoints.add(particlePoint);
+                }
+            });
+        });
     }
 
     public void handleMouseScroll(double vertical){
@@ -77,6 +92,10 @@ public class EditorHandler {
         return selectedParticle;
     }
 
+    public List<ParticlePoint> getSelectedPoints(){
+        return selectedPoints;
+    }
+
     public PlayerEntity getPlayer(){
         return player;
     }
@@ -86,8 +105,20 @@ public class EditorHandler {
     }
 
     public void changeCurrentMenu(EditorMenu menu, Routine routine){
+        if (currentMenu instanceof PointMenu) {
+            selectedPoints.clear();
+        }
         currentMenu.onExit(routine);
         this.currentMenu = menu;
+    }
+
+    public void subscribeToScroll(ScrollSubscriber subscriber){
+        this.subscriber = subscriber;
+    }
+
+    public void unsubscribeToScroll(ScrollSubscriber menu){
+        if (subscriber != menu) return;
+        subscriber = null;
     }
 
 }

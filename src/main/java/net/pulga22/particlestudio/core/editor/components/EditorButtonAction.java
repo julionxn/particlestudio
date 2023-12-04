@@ -6,14 +6,14 @@ import net.pulga22.particlestudio.core.routines.Routine;
 
 import java.util.function.Consumer;
 
-public class EditorButtonPart {
+public class EditorButtonAction {
 
     private final Actions action;
     private final Consumer<Routine> consumer;
     private final Identifier texture;
     private final String description;
 
-    public EditorButtonPart(Actions action, Identifier texture, Consumer<Routine> consumer, String description){
+    public EditorButtonAction(Actions action, Identifier texture, Consumer<Routine> consumer, String description){
         this.action = action;
         this.consumer = consumer;
         this.texture = texture;

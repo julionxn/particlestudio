@@ -10,15 +10,15 @@ public class TimelineMenu extends EditorMenu {
     public TimelineMenu(EditorMenu previousMenu, EditorHandler editorHandler) {
         super(previousMenu, editorHandler, "Timeline");
         addButton(EditorButton.builder("timeline/tick", "Tick")
-                .setAction(Actions.Q, routine -> routine.adjustFrame(-1), "Anterior -1")
-                .setAction(Actions.E, routine -> routine.adjustFrame(1), "Siguiente +1")
-                .setAction(Actions.Z, routine -> routine.adjustFrame(-10), "Anterior -10")
-                .setAction(Actions.C, routine -> routine.adjustFrame(10), "Siguiente +10").build());
+                .setAction(Actions.Q, routine -> routine.getTimeline().adjustFrame(-1), "Anterior -1")
+                .setAction(Actions.E, routine -> routine.getTimeline().adjustFrame(1), "Siguiente +1")
+                .setAction(Actions.Z, routine -> routine.getTimeline().adjustFrame(-10), "Anterior -10")
+                .setAction(Actions.C, routine -> routine.getTimeline().adjustFrame(10), "Siguiente +10").build());
         addButton(EditorButton.builder("timeline/onion", "Onion Skin")
-                .setAction(Actions.Q, routine -> routine.adjustOnionLowerBound(1), "Limite inferior +1")
-                .setAction(Actions.E, routine -> routine.adjustOnionLowerBound(-1), "Limite inferior -1")
-                .setAction(Actions.Z, routine -> routine.adjustOnionUpperBound(1), "Limite superior +1")
-                .setAction(Actions.C, routine -> routine.adjustOnionUpperBound(-1), "Limite superior -1").build());
+                .setAction(Actions.Q, routine -> routine.getTimeline().adjustOnionLowerBound(1), "Limite inferior +1")
+                .setAction(Actions.E, routine -> routine.getTimeline().adjustOnionLowerBound(-1), "Limite inferior -1")
+                .setAction(Actions.Z, routine -> routine.getTimeline().adjustOnionUpperBound(1), "Limite superior +1")
+                .setAction(Actions.C, routine -> routine.getTimeline().adjustOnionUpperBound(-1), "Limite superior -1").build());
     }
 
 }
