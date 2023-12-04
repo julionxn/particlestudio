@@ -26,10 +26,12 @@ public class EditorMenu {
     private final List<EditorButton> buttons = new ArrayList<>();
     private int currentIndex = 0;
     private final EditorMenu previousMenu;
+    protected final EditorHandler editorHandler;
     private final String menuName;
 
     public EditorMenu(EditorMenu previousMenu, EditorHandler editorHandler, String menuName){
         this.previousMenu = previousMenu;
+        this.editorHandler = editorHandler;
         this.menuName = menuName;
     }
 

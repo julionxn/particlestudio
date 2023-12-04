@@ -103,7 +103,8 @@ public class Routine implements Serializable {
         Vec3d pos = player.getPos().add(0, 1.5, 0);
         double pitch = clampAngle(Math.toRadians(player.getPitch() + 90));
         double yaw = clampAngle(Math.toRadians(player.getHeadYaw() + 90));
-        return new SelectionCalculator(timeline.getPoints().subList(timeline.onionLowerBound(),
+        return new SelectionCalculator(timeline.getPoints()
+                .subList(timeline.onionLowerBound(),
                 timeline.onionUpperBound() + 1),
                 pos, yaw, pitch).getSelectedPoint();
     }

@@ -22,6 +22,7 @@ public class Timeline implements Serializable {
         if (time > actualLength) {
             actualLength = time;
             displayLength = time;
+            adjustOnionUpperBound(actualLength - onionUpperBound());
         }
         if (time == displayLength){
             adjustFrame(1);

@@ -13,18 +13,20 @@ public class PathMenu extends EditorMenu {
         super(previousMenu, editorHandler, name);
     }
 
-    protected void changeDensity(Routine routine, int in){
+    protected void changeDensity(Routine routine, float in){
         Path path = routine.getEditingPath();
         if (path == null) return;
-        int density = path.getDensity();
-        if (density + in < 1) return;
+        float density = path.getDensity();
+        if (density + in <= 0) return;
         path.changeDensity(density + in);
     }
 
     protected void confirm(Routine routine){
         Path path = routine.getEditingPath();
         if (path == null) return;
-        path.transform(routine);
+        path.transform(routine, editorHandler.getSelectedParticle());
+        routine.newPath(null);
+        editorHandler.changeCurrentMenu(getPreviousMenu().getPreviousMenu(), routine);
     }
 
     protected void cancel(EditorHandler editorHandler, Routine routine){
@@ -34,10 +36,10 @@ public class PathMenu extends EditorMenu {
 
     protected void addDensity(){
         addButton(EditorButton.builder("points/paths/density", "Change density")
-                .setAction(Actions.Q, routine -> changeDensity(routine, 1), "Density +1")
-                .setAction(Actions.E, routine -> changeDensity(routine, -1), "Density -1")
-                .setAction(Actions.Z, routine -> changeDensity(routine, 10), "Density +10")
-                .setAction(Actions.C, routine -> changeDensity(routine, -10), "Density -10")
+                .setAction(Actions.Q, routine -> changeDensity(routine, 0.1f), "Density +0.1")
+                .setAction(Actions.E, routine -> changeDensity(routine, -0.1f), "Density -0.1")
+                .setAction(Actions.Z, routine -> changeDensity(routine, 1), "Density +1")
+                .setAction(Actions.C, routine -> changeDensity(routine, -1), "Density -1")
                 .build());
     }
 
