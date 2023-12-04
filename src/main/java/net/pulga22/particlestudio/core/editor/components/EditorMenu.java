@@ -26,12 +26,10 @@ public class EditorMenu {
     private final List<EditorButton> buttons = new ArrayList<>();
     private int currentIndex = 0;
     private final EditorMenu previousMenu;
-    private final EditorHandler editorHandler;
     private final String menuName;
 
     public EditorMenu(EditorMenu previousMenu, EditorHandler editorHandler, String menuName){
         this.previousMenu = previousMenu;
-        this.editorHandler = editorHandler;
         this.menuName = menuName;
     }
 
@@ -101,23 +99,11 @@ public class EditorMenu {
         }
     }
 
-    public void handleRightClick(Routine routine){
-
-    }
-
     public void handleMouseScroll(double vertical){
-        if (vertical > 0){
-            if (currentIndex < buttons.size() - 1){
-                currentIndex += 1;
-            } else {
-                currentIndex = 0;
-            }
+        if (vertical > 0) {
+            currentIndex = (currentIndex < buttons.size() - 1) ? currentIndex + 1 : 0;
         } else if (vertical < 0) {
-            if (currentIndex > 0){
-                currentIndex -= 1;
-            } else {
-                currentIndex = buttons.size() - 1;
-            }
+            currentIndex = (currentIndex > 0) ? currentIndex - 1 : buttons.size() - 1;
         }
     }
 

@@ -14,13 +14,15 @@ import java.util.Optional;
 public class ParticlePoint implements Serializable {
 
     public final double[] position = {0, 0, 0};
+    public final int tick;
     public final String particleType;
 
-    public ParticlePoint(String particleType, double x, double y, double z) {
+    public ParticlePoint(String particleType, double x, double y, double z, int tick) {
         position[0] = x;
         position[1] = y;
         position[2] = z;
         this.particleType = particleType;
+        this.tick = tick;
     }
 
     public void spawnParticle(World world) {

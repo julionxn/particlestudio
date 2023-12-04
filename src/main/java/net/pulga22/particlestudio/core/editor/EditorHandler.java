@@ -20,6 +20,9 @@ public class EditorHandler {
     private ScrollSubscriber subscriber;
     private String selectedParticle = "minecraft:happy_villager";
     private final List<ParticlePoint> selectedPoints = new ArrayList<>();
+    private final int NO_MODS = 0;
+    private final int SHIFT_MOD = 1;
+    private final int CTRL_MOD = 2;
 
     public EditorHandler(PlayerEditor playerEditor, PlayerEntity player) {
         this.playerEditor = playerEditor;
@@ -27,26 +30,23 @@ public class EditorHandler {
     }
 
     public void handleRightClick(PlayerEntity player, int mods){
-        playerEditor.getCurrentRoutine().ifPresent(routine -> {
-            currentMenu.handleRightClick(routine);
-            routine.tryToSelectPoint(player, mods).ifPresent(particlePoint -> {
-                if (selectedPoints.contains(particlePoint)){
-                    selectedPoints.remove(particlePoint);
-                    if (selectedPoints.isEmpty()) handleKeyboard(256);
-                    return;
+        playerEditor.getCurrentRoutine().ifPresent(routine -> routine.tryToSelectPoint(player).ifPresent(particlePoint -> {
+            if (selectedPoints.contains(particlePoint)){
+                selectedPoints.remove(particlePoint);
+                if (selectedPoints.isEmpty()) changeCurrentMenu(new MainMenu(this), routine);
+                return;
+            }
+            if (selectedPoints.isEmpty()) {
+                changeCurrentMenu(new PointMenu(currentMenu, this), routine);
+            }
+            switch (mods){
+                case NO_MODS -> {
+                    selectedPoints.clear();
+                    selectedPoints.add(particlePoint);
                 }
-                if (selectedPoints.isEmpty()) {
-                    changeCurrentMenu(new PointMenu(currentMenu, this), routine);
-                }
-                switch (mods){
-                    case 0 -> {
-                        selectedPoints.clear();
-                        selectedPoints.add(particlePoint);
-                    }
-                    case 1, 2 -> selectedPoints.add(particlePoint);
-                }
-            });
-        });
+                case SHIFT_MOD, CTRL_MOD -> selectedPoints.add(particlePoint);
+            }
+        }));
     }
 
     public void handleMouseScroll(double vertical){
@@ -59,24 +59,22 @@ public class EditorHandler {
 
     public void handleKeyboard(int key){
         Optional<Routine> routineOptional = playerEditor.getCurrentRoutine();
-        if (key == 256){
-            EditorMenu prevMenu = currentMenu.getPreviousMenu();
-            if (prevMenu != null){
-                routineOptional.ifPresent(routine -> changeCurrentMenu(prevMenu, routine));
-            } else {
-                exitEditor();
+        final int ESCAPE_KEY = 256;
+        final int k_KEY = 75;
+        final int TAB_KEY = 258;
+        switch (key){
+            case ESCAPE_KEY -> {
+                EditorMenu prevMenu = currentMenu.getPreviousMenu();
+                if (prevMenu != null){
+                    routineOptional.ifPresent(routine -> changeCurrentMenu(prevMenu, routine));
+                } else {
+                    exitEditor();
+                }
             }
-            return;
+            case k_KEY -> exitEditor();
+            case TAB_KEY -> handleMouseScroll(1.0);
+            default -> routineOptional.ifPresent(routine -> currentMenu.handleKeyboardInput(key, routine));
         }
-        if (key == 75) {
-            exitEditor();
-            return;
-        }
-        if (key == 258) {
-            handleMouseScroll(1.0);
-            return;
-        }
-        playerEditor.getCurrentRoutine().ifPresent(routine -> currentMenu.handleKeyboardInput(key, routine));
     }
 
     private void exitEditor(){

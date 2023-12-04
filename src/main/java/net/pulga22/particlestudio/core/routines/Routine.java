@@ -81,7 +81,8 @@ public class Routine implements Serializable {
         PlayerEntity player = editorHandler.getPlayer();
         if (player == null) return;
         Vec3d pos = player.getPos();
-        addParticlePoint(timeline.getCurrentEditingTick(), new ParticlePoint(editorHandler.getSelectedParticle(), pos.x, pos.y, pos.z));
+        int tick = timeline.getCurrentEditingTick();
+        addParticlePoint(tick, new ParticlePoint(editorHandler.getSelectedParticle(), pos.x, pos.y, pos.z, tick));
     }
 
     public void addParticlePoint(int time, ParticlePoint particlePoint){
@@ -97,9 +98,7 @@ public class Routine implements Serializable {
         return editingPath;
     }
 
-    //Yaw: Horizontal || Pitch: Vertical
-    //mods: 0 normal || 1 shift || 2 control
-    public Optional<ParticlePoint> tryToSelectPoint(PlayerEntity player, int mods) {
+    public Optional<ParticlePoint> tryToSelectPoint(PlayerEntity player) {
         if (timeline.isEmpty()) return Optional.empty();
         Vec3d pos = player.getPos().add(0, 1.5, 0);
         double pitch = clampAngle(Math.toRadians(player.getPitch() + 90));
