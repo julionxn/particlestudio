@@ -1,5 +1,7 @@
 package net.pulga22.particlestudio.core.editor.screen.menus.paths;
 
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.DrawContext;
 import net.pulga22.particlestudio.core.editor.Actions;
 import net.pulga22.particlestudio.core.editor.EditorHandler;
 import net.pulga22.particlestudio.core.editor.components.EditorButton;
@@ -11,6 +13,11 @@ public class PathMenu extends EditorMenu {
 
     public PathMenu(EditorMenu previousMenu, EditorHandler editorHandler, String name) {
         super(previousMenu, editorHandler, name);
+    }
+
+    @Override
+    public void render(DrawContext context, MinecraftClient client, Routine currentRoutine) {
+        super.render(context, client, currentRoutine);
     }
 
     protected void changeDensity(Routine routine, float in){
@@ -25,12 +32,12 @@ public class PathMenu extends EditorMenu {
         Path path = routine.getEditingPath();
         if (path == null) return;
         path.transform(routine, editorHandler.getSelectedParticle());
-        routine.newPath(null);
+        routine.clearRoutine();
         editorHandler.changeCurrentMenu(getPreviousMenu().getPreviousMenu(), routine);
     }
 
     protected void cancel(EditorHandler editorHandler, Routine routine){
-        routine.newPath(null);
+        routine.clearRoutine();
         editorHandler.changeCurrentMenu(getPreviousMenu(), routine);
     }
 
@@ -52,4 +59,9 @@ public class PathMenu extends EditorMenu {
                 .build());
     }
 
+    @Override
+    public void onExit(Routine routine) {
+        super.onExit(routine);
+        routine.clearRoutine();
+    }
 }

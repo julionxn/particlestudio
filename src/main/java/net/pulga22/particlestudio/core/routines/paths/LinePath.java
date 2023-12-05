@@ -2,8 +2,8 @@ package net.pulga22.particlestudio.core.routines.paths;
 
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.minecraft.util.math.Vec3d;
-import net.pulga22.particlestudio.core.editor.EditorHandler;
 import net.pulga22.particlestudio.core.routines.ParticlePoint;
+import net.pulga22.particlestudio.core.routines.PointRenderer;
 import net.pulga22.particlestudio.core.routines.Routine;
 
 public class LinePath extends Path {
@@ -15,12 +15,13 @@ public class LinePath extends Path {
     @Override
     public void render(WorldRenderContext context) {
         super.render(context);
+        PointRenderer.renderLine(context, fromPos(), toPos());
     }
 
     @Override
     public void transform(Routine routine, String selectedParticle) {
-        Vec3d toPos = to();
-        Vec3d fromPos = from();
+        Vec3d toPos = toPos();
+        Vec3d fromPos = fromPos();
         final float density = getDensity();
         final int duration = getDuration();
         final double difX = (toPos.x - fromPos.x) / (density + 1);

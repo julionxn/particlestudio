@@ -94,29 +94,19 @@ public class Routine implements Serializable {
         editingPath = path;
     }
 
+    public void clearRoutine(){
+        editingPath = null;
+    }
+
     public Path getEditingPath(){
         return editingPath;
     }
 
     public Optional<ParticlePoint> tryToSelectPoint(PlayerEntity player) {
         if (timeline.isEmpty()) return Optional.empty();
-        Vec3d pos = player.getPos().add(0, 1.5, 0);
-        double pitch = clampAngle(Math.toRadians(player.getPitch() + 90));
-        double yaw = clampAngle(Math.toRadians(player.getHeadYaw() + 90));
         return new SelectionCalculator(timeline.getPoints()
-                .subList(timeline.onionLowerBound(),
-                timeline.onionUpperBound() + 1),
-                pos, yaw, pitch).getSelectedPoint();
-    }
-
-    private double clampAngle(double angle) {
-        angle = angle % (2 * Math.PI);
-        if (angle > Math.PI) {
-            angle -= 2 * Math.PI;
-        } else if (angle < -Math.PI) {
-            angle += 2 * Math.PI;
-        }
-        return angle;
+                .subList(timeline.onionLowerBound(), timeline.onionUpperBound() + 1), player)
+                .getSelectedPoint();
     }
 
     public static Optional<byte[]> serialize(Routine routine){

@@ -1,5 +1,6 @@
 package net.pulga22.particlestudio.core.editor;
 
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.Vec3d;
 import net.pulga22.particlestudio.core.routines.ParticlePoint;
 
@@ -16,11 +17,21 @@ public class SelectionCalculator {
     private final double angleThreshold = Math.toRadians(5);
     private ParticlePoint selectedPoint;
 
-    public SelectionCalculator(List<List<ParticlePoint>> points, Vec3d currentLocation, double yaw, double pitch){
-        this.currentLocation = currentLocation;
-        this.standardYaw = yaw;
-        this.standardPitch = pitch;
+    public SelectionCalculator(List<List<ParticlePoint>> points, PlayerEntity player){
+        this.standardPitch = clampAngle(Math.toRadians(player.getPitch() + 90));
+        this.standardYaw = clampAngle(Math.toRadians(player.getHeadYaw() + 90));
+        this.currentLocation = player.getPos().add(0, 1.5, 0);
         cleanPoints(points);
+    }
+
+    private double clampAngle(double angle) {
+        angle = angle % (2 * Math.PI);
+        if (angle > Math.PI) {
+            angle -= 2 * Math.PI;
+        } else if (angle < -Math.PI) {
+            angle += 2 * Math.PI;
+        }
+        return angle;
     }
 
     private void cleanPoints(List<List<ParticlePoint>> points){
