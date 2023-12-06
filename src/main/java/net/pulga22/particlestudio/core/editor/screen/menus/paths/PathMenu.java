@@ -6,7 +6,6 @@ import net.pulga22.particlestudio.core.editor.Actions;
 import net.pulga22.particlestudio.core.editor.EditorHandler;
 import net.pulga22.particlestudio.core.editor.components.EditorButton;
 import net.pulga22.particlestudio.core.editor.components.EditorMenu;
-import net.pulga22.particlestudio.core.routines.paths.Path;
 import net.pulga22.particlestudio.core.routines.Routine;
 
 public class PathMenu extends EditorMenu {
@@ -21,19 +20,19 @@ public class PathMenu extends EditorMenu {
     }
 
     protected void changeDensity(Routine routine, float in){
-        Path path = routine.getEditingPath();
-        if (path == null) return;
-        float density = path.getDensity();
-        if (density + in <= 0) return;
-        path.changeDensity(density + in);
+        routine.getEditingPath().ifPresent(path -> {
+            float density = path.getDensity();
+            if (density + in <= 0) return;
+            path.changeDensity(density + in);
+        });
     }
 
     protected void confirm(Routine routine){
-        Path path = routine.getEditingPath();
-        if (path == null) return;
-        path.transform(routine, editorHandler.getSelectedParticle());
-        routine.clearRoutine();
-        editorHandler.changeCurrentMenu(getPreviousMenu().getPreviousMenu(), routine);
+        routine.getEditingPath().ifPresent(path -> {
+            path.apply(routine, editorHandler.getSelectedParticle());
+            routine.clearRoutine();
+            editorHandler.changeCurrentMenu(getPreviousMenu().getPreviousMenu(), routine);
+        });
     }
 
     protected void cancel(EditorHandler editorHandler, Routine routine){

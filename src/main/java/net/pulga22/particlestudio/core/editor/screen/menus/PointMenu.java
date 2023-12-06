@@ -4,8 +4,10 @@ import net.pulga22.particlestudio.core.editor.Actions;
 import net.pulga22.particlestudio.core.editor.EditorHandler;
 import net.pulga22.particlestudio.core.editor.components.EditorButton;
 import net.pulga22.particlestudio.core.editor.components.EditorMenu;
+import net.pulga22.particlestudio.core.editor.screen.menus.paths.CurvePathMenu;
 import net.pulga22.particlestudio.core.editor.screen.menus.paths.LinePathMenu;
 import net.pulga22.particlestudio.core.routines.ParticlePoint;
+import net.pulga22.particlestudio.core.routines.paths.CurvePath;
 import net.pulga22.particlestudio.core.routines.paths.LinePath;
 
 import java.util.List;
@@ -40,8 +42,14 @@ public class PointMenu extends EditorMenu {
                     List<ParticlePoint> points = editorHandler.getSelectedPoints();
                     if (points.size() != 2) return;
                     routine.newPath(new LinePath(points.get(0), points.get(1)));
-                    editorHandler.changeCurrentMenu(new LinePathMenu(this, editorHandler), routine);
+                    editorHandler.changeCurrentMenu(new LinePathMenu(getPreviousMenu(), editorHandler), routine);
                 }, "Line")
+                .setAction(Actions.E, routine -> {
+                    List<ParticlePoint> points = editorHandler.getSelectedPoints();
+                    if (points.size() != 2) return;
+                    routine.newPath(new CurvePath(points.get(0), points.get(1)));
+                    editorHandler.changeCurrentMenu(new CurvePathMenu(getPreviousMenu(), editorHandler), routine);
+                }, "Curve")
                 .build());
     }
 

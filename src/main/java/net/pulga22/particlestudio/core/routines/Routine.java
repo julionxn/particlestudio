@@ -98,8 +98,8 @@ public class Routine implements Serializable {
         editingPath = null;
     }
 
-    public Path getEditingPath(){
-        return editingPath;
+    public Optional<Path> getEditingPath(){
+        return Optional.ofNullable(editingPath);
     }
 
     public Optional<ParticlePoint> tryToSelectPoint(PlayerEntity player) {
