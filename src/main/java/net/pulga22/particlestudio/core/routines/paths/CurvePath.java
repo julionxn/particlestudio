@@ -44,13 +44,13 @@ public class CurvePath extends Path {
         final float density = getDensity();
         final int duration = getDuration();
         final int maxPoints = (int) Math.max(1, Math.floor(density));
-        final int iters = Math.min(duration, maxPoints);
+        final int items = Math.min(duration, maxPoints);
         final int deltaTick = (int) Math.ceil((double) duration / (maxPoints + 1));
-        final int pointsPerTick = maxPoints / iters;
-        int remainingPoints = maxPoints - (iters * pointsPerTick);
+        final int pointsPerTick = maxPoints / items;
+        int remainingPoints = maxPoints - (items * pointsPerTick);
         float deltaT = 1f / (maxPoints + 1);
         int currentPoint = 1;
-        for (int i = 0; i < iters; i++) {
+        for (int i = 0; i < items; i++) {
             int currentTick = ((i + 1) * deltaTick) + startingTick;
             for (int j = 0; j < pointsPerTick; j++) {
                 points.add(getPoint(currentTick, calculatePos(deltaT * currentPoint++)));

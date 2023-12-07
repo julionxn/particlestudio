@@ -4,7 +4,6 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.util.Identifier;
 import net.pulga22.particlestudio.ParticleStudio;
-import net.pulga22.particlestudio.core.editor.Actions;
 import net.pulga22.particlestudio.core.editor.EditorHandler;
 import net.pulga22.particlestudio.core.routines.Routine;
 import net.pulga22.particlestudio.core.routines.Timeline;

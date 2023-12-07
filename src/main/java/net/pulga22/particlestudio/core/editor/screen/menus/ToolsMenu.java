@@ -1,7 +1,7 @@
 package net.pulga22.particlestudio.core.editor.screen.menus;
 
 import net.minecraft.client.MinecraftClient;
-import net.pulga22.particlestudio.core.editor.Actions;
+import net.pulga22.particlestudio.core.editor.components.Actions;
 import net.pulga22.particlestudio.core.editor.EditorHandler;
 import net.pulga22.particlestudio.core.editor.components.EditorButton;
 import net.pulga22.particlestudio.core.editor.components.EditorMenu;

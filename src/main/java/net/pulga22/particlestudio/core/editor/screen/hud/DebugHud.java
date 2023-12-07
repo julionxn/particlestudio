@@ -20,7 +20,7 @@ public class DebugHud implements HudRenderCallback {
         PlayerEditor editor = accessor.particlestudio$getEditor();
         editor.getCurrentRoutine().ifPresent(routine -> {
             Timeline timeline = routine.getTimeline();
-            drawText(context, client, "CURRENTEDIT: " + timeline.getCurrentEditingTick(), 0);
+            drawText(context, client, "CURRENT_EDIT: " + timeline.getCurrentEditingTick(), 0);
             drawText(context, client, "DISPLAY: " + timeline.displayLength(), 20);
             drawText(context, client, "ACTUAL: " + timeline.length(), 40);
             drawText(context, client, "LOWER: " + timeline.onionLowerBound(), 60);

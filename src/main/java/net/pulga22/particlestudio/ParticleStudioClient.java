@@ -8,7 +8,6 @@ import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.client.MinecraftClient;
-import net.pulga22.particlestudio.core.editor.EditorHandler;
 import net.pulga22.particlestudio.core.editor.PlayerEditor;
 import net.pulga22.particlestudio.core.editor.screen.hud.DebugHud;
 import net.pulga22.particlestudio.core.editor.screen.hud.EditorHud;
@@ -33,13 +32,9 @@ public class ParticleStudioClient implements ClientModInitializer {
             PlayerEntityAccessor accessor = (PlayerEntityAccessor) client.player;
             if (accessor == null || !accessor.particlestudio$isEditing()) return;
             PlayerEditor playerEditor  = accessor.particlestudio$getEditor();
-            playerEditor.getCurrentRoutine().ifPresent(routine -> {
-                routine.render(context, playerEditor.getHandler().getSelectedPoints());
-            });
+            playerEditor.getCurrentRoutine().ifPresent(routine -> routine.render(context, playerEditor.getHandler().getSelectedPoints()));
         });
-        ClientTickEvents.END_WORLD_TICK.register(world -> {
-            ParticleClientTicker.getInstance().tick(world);
-        });
+        ClientTickEvents.END_WORLD_TICK.register(world -> ParticleClientTicker.getInstance().tick(world));
     }
 
 

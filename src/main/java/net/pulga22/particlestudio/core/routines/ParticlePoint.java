@@ -27,9 +27,7 @@ public class ParticlePoint implements Serializable {
 
     public void spawnParticle(World world) {
         Optional<ParticleType<?>> particleTypeOptional = ParticleRoutinesManager.getInstance().getParticleType(particleType);
-        particleTypeOptional.ifPresent(particle -> {
-            world.addParticle((ParticleEffect) particle, position[0], position[1], position[2], 0, 0, 0);
-        });
+        particleTypeOptional.ifPresent(particle -> world.addParticle((ParticleEffect) particle, position[0], position[1], position[2], 0, 0, 0));
     }
 
     public Vec3d getPosition(){
