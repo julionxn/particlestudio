@@ -52,11 +52,6 @@ public class RoutinePlayer {
         currentTick++;
     }
 
-    public int length(){
-        if (points == null) return 0;
-        return points.size();
-    }
-
     public boolean isPlaying(){
         return playing;
     }

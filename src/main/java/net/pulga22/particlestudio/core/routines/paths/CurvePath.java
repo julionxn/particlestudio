@@ -49,16 +49,14 @@ public class CurvePath extends Path {
         final int pointsPerTick = maxPoints / iters;
         int remainingPoints = maxPoints - (iters * pointsPerTick);
         float deltaT = 1f / (maxPoints + 1);
-        int currentPoint = 0;
+        int currentPoint = 1;
         for (int i = 0; i < iters; i++) {
             int currentTick = ((i + 1) * deltaTick) + startingTick;
             for (int j = 0; j < pointsPerTick; j++) {
-                points.add(getPoint(currentTick, calculatePos(deltaT * (currentPoint + 1))));
-                currentPoint++;
+                points.add(getPoint(currentTick, calculatePos(deltaT * currentPoint++)));
             }
             if (remainingPoints > 0){
-                points.add(getPoint(currentTick, calculatePos(deltaT * (currentPoint + 1))));
-                currentPoint++;
+                points.add(getPoint(currentTick, calculatePos(deltaT * currentPoint++)));
                 remainingPoints--;
             }
         }

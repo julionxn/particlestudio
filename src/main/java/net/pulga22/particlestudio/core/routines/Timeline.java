@@ -94,10 +94,6 @@ public class Timeline implements Serializable {
         return timeline;
     }
 
-    public int size(){
-        return timeline.size();
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

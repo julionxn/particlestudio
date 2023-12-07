@@ -49,9 +49,7 @@ public class SelectedParticleMenu extends Screen implements ScrollSubscriber {
 
         ButtonWidget search = ButtonWidget.builder(Text.of("Set"), button -> {
             String selected = textFieldWidget.getText();
-            ParticleRoutinesManager.getInstance().getParticleType(selected).ifPresent(particleType -> {
-                handler.changeSelectedParticle(selected);
-            });
+            ParticleRoutinesManager.getInstance().getParticleType(selected).ifPresent(particleType -> handler.changeSelectedParticle(selected));
         }).dimensions(x + 121, y - 23, 60, 20).build();
         addDrawableChild(search);
 
@@ -62,9 +60,7 @@ public class SelectedParticleMenu extends Screen implements ScrollSubscriber {
         addDrawableChild(upButton);
         for (int i = startingParticleIndex; i - startingParticleIndex < buttonsToDisplay; i++){
             String id = allParticlesIds.get(i);
-            ParticleButtonOption buttonOption = ParticleButtonOption.builder(this, id, button -> {
-                handler.changeSelectedParticle(id);
-            }).position(x, y).size(180, 20).build();
+            ParticleButtonOption buttonOption = ParticleButtonOption.builder(this, id, button -> handler.changeSelectedParticle(id)).position(x, y).size(180, 20).build();
             addDrawableChild(buttonOption);
             y += 20;
         }

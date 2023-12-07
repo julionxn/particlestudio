@@ -33,9 +33,7 @@ public class NewRoutineMenu extends Screen {
             playerEditor.createRoutine(nameText);
             client.setScreen(previousScreen);
         }).dimensions(centerX - 100, centerY - 10, 80, 20).build();
-        ButtonWidget cancelButton = ButtonWidget.builder(Text.of("Cancelar"), button -> {
-            client.setScreen(previousScreen);
-        }).dimensions(centerX + 20, centerY - 10, 80, 20).build();
+        ButtonWidget cancelButton = ButtonWidget.builder(Text.of("Cancelar"), button -> client.setScreen(previousScreen)).dimensions(centerX + 20, centerY - 10, 80, 20).build();
         addDrawableChild(createButton);
         addDrawableChild(cancelButton);
         addDrawableChild(name);

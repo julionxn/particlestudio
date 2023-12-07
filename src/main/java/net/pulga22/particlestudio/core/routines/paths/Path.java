@@ -1,11 +1,8 @@
 package net.pulga22.particlestudio.core.routines.paths;
 
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Vec3d;
-import net.pulga22.particlestudio.ParticleStudio;
 import net.pulga22.particlestudio.core.routines.ParticlePoint;
-import net.pulga22.particlestudio.core.routines.PointRenderer;
 import net.pulga22.particlestudio.core.routines.Routine;
 
 import java.util.ArrayList;
@@ -32,7 +29,7 @@ public abstract class Path {
     public void render(WorldRenderContext context) {
         ghostPoints.forEach(ghostPoint -> ghostPoint.render(context));
         renderPath(context);
-    };
+    }
 
     public abstract void renderPath(WorldRenderContext context);
 
@@ -57,8 +54,7 @@ public abstract class Path {
 
     public void changeDensity(float to){
         density = to;
-        ghostPoints.clear();
-        calculate(ghostPoints);
+        recalculate();
     }
 
     protected void recalculate(){

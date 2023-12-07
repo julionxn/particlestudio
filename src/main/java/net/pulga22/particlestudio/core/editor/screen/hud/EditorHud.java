@@ -5,10 +5,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.entity.player.PlayerEntity;
 import net.pulga22.particlestudio.core.editor.PlayerEditor;
-import net.pulga22.particlestudio.core.routines.Routine;
 import net.pulga22.particlestudio.utils.mixins.PlayerEntityAccessor;
-
-import java.util.Optional;
 
 public class EditorHud implements HudRenderCallback {
 
