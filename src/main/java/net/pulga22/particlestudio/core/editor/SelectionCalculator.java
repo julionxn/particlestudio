@@ -4,22 +4,23 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.Vec3d;
 import net.pulga22.particlestudio.core.routines.ParticlePoint;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.BiConsumer;
 
 public class SelectionCalculator {
 
-    private final List<ParticlePoint> usefulPoints = new ArrayList<>();
     private final Vec3d currentLocation;
     private final double standardYaw;
     private final double standardPitch;
-    private final double angleThreshold = Math.toRadians(5);
+    private final double angleThreshold = Math.toRadians(4.2);
+    private double leastDistance = Double.POSITIVE_INFINITY;
     private ParticlePoint selectedPoint;
+    private static final double PI_HALF = 1.570796;
 
     public SelectionCalculator(List<List<ParticlePoint>> points, PlayerEntity player){
-        this.standardPitch = clampAngle(Math.toRadians(player.getPitch() + 90));
-        this.standardYaw = clampAngle(Math.toRadians(player.getHeadYaw() + 90));
+        this.standardPitch = clampAngle(Math.toRadians(player.getPitch()) + PI_HALF);
+        this.standardYaw = clampAngle(Math.toRadians(player.getHeadYaw()) + PI_HALF);
         this.currentLocation = player.getPos().add(0, 1.5, 0);
         cleanPoints(points);
     }
@@ -37,20 +38,17 @@ public class SelectionCalculator {
     private void cleanPoints(List<List<ParticlePoint>> points){
         for (List<ParticlePoint> pointsOf : points) {
             for (ParticlePoint particlePoint : pointsOf) {
-                Vec3d distance = particlePoint.getPosition().subtract(currentLocation);
+                Vec3d particlePosition = particlePoint.getPosition();
+                Vec3d distance = particlePosition.subtract(currentLocation);
                 double yaw = Math.atan2(distance.z, distance.x);
-                double pitch = Math.atan2(-distance.y, Math.sqrt((distance.x * distance.x) + (distance.z * distance.z))) + Math.toRadians(90);
-                if (areAnglesClose(standardYaw, standardPitch, yaw, pitch)){
-                    usefulPoints.add(particlePoint);
-                }
-            }
-        }
-        double distance = Double.POSITIVE_INFINITY;
-        for (ParticlePoint usefulPoint : usefulPoints) {
-            double distanceTo = currentLocation.distanceTo(usefulPoint.getPosition());
-            if (distanceTo < distance){
-                selectedPoint = usefulPoint;
-                distance = distanceTo;
+                double pitch = Math.atan2(-distance.y, Math.sqrt((distance.x * distance.x) + (distance.z * distance.z))) + PI_HALF;
+                areAnglesClose(yaw, pitch, (yawDif, pitchDif) -> {
+                    double distanceTo = distance.x * distance.x + distance.y * distance.y + distance.z * distance.z;
+                    if (distanceTo < leastDistance){
+                        selectedPoint = particlePoint;
+                        leastDistance = distanceTo;
+                    }
+                });
             }
         }
     }
@@ -60,10 +58,10 @@ public class SelectionCalculator {
         return Optional.of(selectedPoint);
     }
 
-    private boolean areAnglesClose(double normalYaw, double normalPitch, double calculatedYaw, double calculatedPitch) {
-        boolean yawClose = Math.abs(normalYaw - calculatedYaw) < angleThreshold;
-        boolean pitchClose = Math.abs(normalPitch - calculatedPitch) < angleThreshold;
-        return yawClose && pitchClose;
+    private void areAnglesClose(double calculatedYaw, double calculatedPitch, BiConsumer<Double, Double> ifSo) {
+        double yawClose = Math.abs(standardYaw - calculatedYaw);
+        double pitchClose = Math.abs(standardPitch - calculatedPitch);
+        if (yawClose < angleThreshold && pitchClose < angleThreshold) ifSo.accept(yawClose, pitchClose);
     }
 
 }

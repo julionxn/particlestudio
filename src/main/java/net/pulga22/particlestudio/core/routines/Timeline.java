@@ -3,6 +3,7 @@ package net.pulga22.particlestudio.core.routines;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class Timeline implements Serializable {
 
@@ -97,5 +98,16 @@ public class Timeline implements Serializable {
         return timeline.size();
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Timeline timeline1 = (Timeline) o;
+        return displayLength == timeline1.displayLength && actualLength == timeline1.actualLength && Objects.equals(timeline, timeline1.timeline);
+    }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(timeline, displayLength, actualLength);
+    }
 }

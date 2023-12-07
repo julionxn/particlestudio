@@ -11,15 +11,15 @@ public class PlayMenu extends EditorMenu {
     public PlayMenu(EditorMenu previousMenu, EditorHandler editorHandler) {
         super(previousMenu, editorHandler, "Play");
         addButton(EditorButton.builder("play/routine", "Routine")
-                .setAction(Actions.Q, Routine::play, "Play")
-                .setAction(Actions.E, Routine::pause, "Pause")
-                .setAction(Actions.Z, Routine::stop, "Stop")
-                .setAction(Actions.C, Routine::restart, "Restart")
+                .setAction(Actions.Q, routine -> routine.getRoutinePlayer().play(), "Play")
+                .setAction(Actions.E, routine -> routine.getRoutinePlayer().pause(), "Pause")
+                .setAction(Actions.Z, routine -> routine.getRoutinePlayer().stop(), "Stop")
+                .setAction(Actions.C, routine -> routine.getRoutinePlayer().restart(), "Restart")
                 .build());
     }
 
     @Override
     public void onExit(Routine routine) {
-        routine.stop();
+        routine.getRoutinePlayer().stop();
     }
 }

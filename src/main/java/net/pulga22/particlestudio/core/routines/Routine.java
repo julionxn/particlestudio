@@ -9,20 +9,26 @@ import net.pulga22.particlestudio.core.routines.paths.Path;
 
 import java.io.*;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 public class Routine implements Serializable {
 
     private final Timeline timeline = new Timeline();
-    private transient RoutinePlayer routinePlayer;
+    private transient RoutinePlayer routinePlayer = new RoutinePlayer(this);
     private transient Path editingPath;
 
     public Timeline getTimeline(){
         return timeline;
     }
 
+    public RoutinePlayer getRoutinePlayer(){
+        if (this.routinePlayer == null) this.routinePlayer = new RoutinePlayer(this);
+        return routinePlayer;
+    }
+
     public void render(WorldRenderContext context, List<ParticlePoint> selectedPoints){
-        if (timeline.isEmpty() || isPlaying()) return;
+        if (timeline.isEmpty() || (routinePlayer != null && routinePlayer.isPlaying())) return;
         renderPoints(context, selectedPoints);
         renderPaths(context);
     }
@@ -45,38 +51,6 @@ public class Routine implements Serializable {
         }
     }
 
-    public void play(){
-        if (routinePlayer == null || routinePlayer.length() != timeline.size()) {
-            routinePlayer = new RoutinePlayer(timeline.getPoints());
-        }
-        if (routinePlayer.isPlaying()) return;
-        routinePlayer.play();
-    }
-
-    public void pause(){
-        if (routinePlayer == null) return;
-        routinePlayer.pause();
-    }
-
-    public void stop(){
-        if (routinePlayer == null) return;
-        routinePlayer.setCurrentTick(0);
-        routinePlayer.pause();
-    }
-
-    public void restart(){
-        if (routinePlayer == null || !routinePlayer.isPlaying()) {
-            play();
-            return;
-        }
-        routinePlayer.setCurrentTick(0);
-    }
-
-    public boolean isPlaying(){
-        if (routinePlayer == null) return false;
-        return routinePlayer.isPlaying();
-    }
-
     public void addParticlePoint(EditorHandler editorHandler){
         PlayerEntity player = editorHandler.getPlayer();
         if (player == null) return;
@@ -86,7 +60,7 @@ public class Routine implements Serializable {
     }
 
     public void addParticlePoint(int time, ParticlePoint particlePoint){
-        if (routinePlayer != null && routinePlayer.isPlaying()) stop();
+        if (routinePlayer != null && routinePlayer.isPlaying()) routinePlayer.stop();
         timeline.addParticlePoint(time, particlePoint);
     }
 
@@ -126,5 +100,18 @@ public class Routine implements Serializable {
         } catch (IOException | ClassNotFoundException e) {
             return Optional.empty();
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Routine routine = (Routine) o;
+        return Objects.equals(timeline, routine.timeline);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(timeline);
     }
 }

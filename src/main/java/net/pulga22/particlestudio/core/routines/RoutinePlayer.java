@@ -7,38 +7,54 @@ import java.util.List;
 
 public class RoutinePlayer {
 
-    private final List<List<ParticlePoint>> particlePoints;
+    private final Routine routine;
     private boolean playing;
     private int currentTick;
+    private List<List<ParticlePoint>> points;
 
-    public RoutinePlayer(List<List<ParticlePoint>> particlePoints){
-        this.particlePoints = particlePoints;
+    public RoutinePlayer(Routine routine){
+        this.routine = routine;
     }
 
     public void play(){
-        if (particlePoints.isEmpty()) return;
+        if (playing) return;
+        List<List<ParticlePoint>> points = routine.getTimeline().getPoints();
+        if (points.isEmpty()) return;
+        this.points = points;
         ParticleClientTicker.getInstance().subscribe(this);
         playing = true;
     }
 
     public void pause(){
+        if (!playing) return;
         ParticleClientTicker.getInstance().unsubscribe(this);
         playing = false;
     }
 
-    public void setCurrentTick(int tick){
-        currentTick = tick;
+    public void stop(){
+        pause();
+        currentTick = 0;
+    }
+
+    public void restart(){
+        if (!playing) {
+            play();
+            return;
+        }
+        currentTick = 0;
     }
 
     public void tick(World world){
-        List<ParticlePoint> points = particlePoints.get(currentTick);
-        points.forEach(particlePoint -> particlePoint.spawnParticle(world));
-        if (currentTick + 1 >= particlePoints.size()) currentTick = -1;
+        if (points == null) return;
+        List<ParticlePoint> tickPoints = points.get(currentTick);
+        tickPoints.forEach(particlePoint -> particlePoint.spawnParticle(world));
+        if (currentTick + 1 >= points.size()) currentTick = -1;
         currentTick++;
     }
 
     public int length(){
-        return particlePoints.size();
+        if (points == null) return 0;
+        return points.size();
     }
 
     public boolean isPlaying(){

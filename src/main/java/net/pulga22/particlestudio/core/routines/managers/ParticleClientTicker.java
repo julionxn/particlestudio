@@ -16,8 +16,8 @@ public class ParticleClientTicker {
         return instance;
     }
 
-    public void subscribe(RoutinePlayer routine){
-        players.add(routine);
+    public void subscribe(RoutinePlayer routinePlayer){
+        players.add(routinePlayer);
     }
 
     public void unsubscribe(RoutinePlayer routine){
