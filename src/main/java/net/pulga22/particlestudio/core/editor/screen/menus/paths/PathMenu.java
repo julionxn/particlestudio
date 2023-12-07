@@ -42,19 +42,17 @@ public class PathMenu extends EditorMenu {
 
     protected void addDensity(){
         addButton(EditorButton.builder("points/paths/density", "Change density")
-                .setAction(Actions.Q, routine -> changeDensity(routine, 0.1f), "Density +0.1")
-                .setAction(Actions.E, routine -> changeDensity(routine, -0.1f), "Density -0.1")
-                .setAction(Actions.Z, routine -> changeDensity(routine, 1), "Density +1")
-                .setAction(Actions.C, routine -> changeDensity(routine, -1), "Density -1")
+                .setAction(Actions.Q, routine -> changeDensity(routine, -0.1f), "Density -0.1")
+                .setAction(Actions.E, routine -> changeDensity(routine, 0.1f), "Density +0.1")
+                .setAction(Actions.Z, routine -> changeDensity(routine, -1), "Density -1")
+                .setAction(Actions.C, routine -> changeDensity(routine, 1), "Density +1")
                 .build());
     }
 
     protected void addConfirmAndCancel(EditorHandler editorHandler){
-        addButton(EditorButton.builder("points/paths/confirm", "Confirm")
+        addButton(EditorButton.builder("points/paths/actions", "Actions")
                 .setAction(Actions.Q, this::confirm, "Confirm")
-                .build());
-        addButton(EditorButton.builder("points/paths/cancel", "Cancel")
-                .setAction(Actions.Q, routine -> cancel(editorHandler, routine), "Cancel")
+                .setAction(Actions.E, routine -> cancel(editorHandler, routine), "Cancel")
                 .build());
     }
 

@@ -118,7 +118,7 @@ public class EditorMenu {
     }
 
     protected static Identifier of(String path){
-        return new Identifier(ParticleStudio.MOD_ID, path);
+        return new Identifier(ParticleStudio.MOD_ID, "buttons/masks/" + path);
     }
 
     public void onExit(Routine routine){

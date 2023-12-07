@@ -57,7 +57,7 @@ public class EditorButton {
 
         public Builder(String path, String description){
             this.path = path;
-            button = new EditorButton(new Identifier(ParticleStudio.MOD_ID, "textures/buttons/" + path + "/main.png"), description);
+            button = new EditorButton(new Identifier(ParticleStudio.MOD_ID, "buttons/" + path + "/main.png"), description);
         }
 
         public Builder setAction(Actions action, Consumer<Routine> consumer, String description){
@@ -66,7 +66,7 @@ public class EditorButton {
         }
 
         private Identifier getTextureOf(Actions action){
-            return new Identifier(ParticleStudio.MOD_ID, "textures/buttons/" + path + "/" + action.toString().toLowerCase() + ".png");
+            return new Identifier(ParticleStudio.MOD_ID, "buttons/" + path + "/" + action.toString().toLowerCase() + ".png");
         }
 
         public EditorButton build(){

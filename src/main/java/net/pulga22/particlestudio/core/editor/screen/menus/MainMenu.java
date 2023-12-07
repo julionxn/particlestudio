@@ -20,7 +20,7 @@ public class MainMenu extends EditorMenu {
         addButton(EditorButton.builder("play", "Play")
                 .setAction(Actions.Q,
                         routine -> editorHandler.changeCurrentMenu(new PlayMenu(this, editorHandler), routine),
-                        "Play").build());
+                        "Entrar").build());
     }
 
 }

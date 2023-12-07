@@ -15,10 +15,10 @@ public class TimelineMenu extends EditorMenu {
                 .setAction(Actions.Z, routine -> routine.getTimeline().adjustFrame(-10), "Anterior -10")
                 .setAction(Actions.C, routine -> routine.getTimeline().adjustFrame(10), "Siguiente +10").build());
         addButton(EditorButton.builder("timeline/onion", "Onion Skin")
-                .setAction(Actions.Q, routine -> routine.getTimeline().adjustOnionLowerBound(1), "Limite inferior +1")
-                .setAction(Actions.E, routine -> routine.getTimeline().adjustOnionLowerBound(-1), "Limite inferior -1")
-                .setAction(Actions.Z, routine -> routine.getTimeline().adjustOnionUpperBound(1), "Limite superior +1")
-                .setAction(Actions.C, routine -> routine.getTimeline().adjustOnionUpperBound(-1), "Limite superior -1").build());
+                .setAction(Actions.Q, routine -> routine.getTimeline().adjustOnionLowerBound(-1), "Limite inferior -1")
+                .setAction(Actions.E, routine -> routine.getTimeline().adjustOnionLowerBound(1), "Limite inferior +1")
+                .setAction(Actions.Z, routine -> routine.getTimeline().adjustOnionUpperBound(-1), "Limite superior -1")
+                .setAction(Actions.C, routine -> routine.getTimeline().adjustOnionUpperBound(1), "Limite superior +1").build());
     }
 
 }
