@@ -6,6 +6,9 @@ import net.pulga22.particlestudio.core.editor.EditorHandler;
 import net.pulga22.particlestudio.core.editor.components.EditorButton;
 import net.pulga22.particlestudio.core.editor.components.EditorMenu;
 import net.pulga22.particlestudio.core.editor.screen.gui.SelectedParticleMenu;
+import net.pulga22.particlestudio.core.routines.ParticlePoint;
+
+import java.util.List;
 
 public class ToolsMenu extends EditorMenu {
 
@@ -19,6 +22,16 @@ public class ToolsMenu extends EditorMenu {
                     if (client == null) return;
                     client.setScreen(new SelectedParticleMenu(editorHandler));
                 }, "Cambiar actual").build());
+        addButton(EditorButton.builder("tools/paste", "Paste")
+                .setAction(Actions.Q, routine -> {
+                    return;
+                    /*
+                    int current = routine.getTimeline().getCurrentEditingTick();
+                    List<ParticlePoint> points = editorHandler.getClipboard();
+                    if (points.isEmpty()) return;
+                    points.forEach(point -> routine.addParticlePoint(point.tick + current, point));
+                     */
+                }, "Paste").build());
     }
 
 }

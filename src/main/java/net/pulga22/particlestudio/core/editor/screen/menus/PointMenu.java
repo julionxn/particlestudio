@@ -51,6 +51,8 @@ public class PointMenu extends EditorMenu {
                     editorHandler.changeCurrentMenu(new CurvePathMenu(getPreviousMenu(), editorHandler), routine);
                 }, "Curve")
                 .build());
+        addButton(EditorButton.builder("points/copy", "Copy")
+                .setAction(Actions.Q, routine -> editorHandler.setClipboard(editorHandler.getSelectedPoints()), "Copy").build());
     }
 
     private void centerToBlock(ParticlePoint particlePoint){

@@ -19,6 +19,8 @@ public class ParticleRoutinesManager {
     private final HashMap<World, WorldRoutines> routines = new HashMap<>();
     private int particlesAmount;
 
+    private ParticleRoutinesManager() {}
+
     public static ParticleRoutinesManager getInstance(){
         if (INSTANCE == null) INSTANCE = new ParticleRoutinesManager();
         return INSTANCE;
@@ -34,7 +36,7 @@ public class ParticleRoutinesManager {
         this.routines.put(world, worldRoutines);
     }
 
-    public void registerParticle(ParticleType<?> particleType){
+    private void registerParticle(ParticleType<?> particleType){
         Identifier identifier = Registries.PARTICLE_TYPE.getId(particleType);
         if (identifier == null) return;
         particles.put(identifier.toString(), particleType);
@@ -57,8 +59,7 @@ public class ParticleRoutinesManager {
     }
 
     public Optional<ParticleType<?>> getParticleType(String id){
-        if (particles.containsKey(id)) return Optional.of(particles.get(id));
-        return Optional.empty();
+        return Optional.ofNullable(particles.get(id));
     }
 
 }

@@ -20,6 +20,7 @@ public class EditorHandler {
     private ScrollSubscriber subscriber;
     private String selectedParticle = "minecraft:happy_villager";
     private final List<ParticlePoint> selectedPoints = new ArrayList<>();
+    private final List<ParticlePoint> clipboard = new ArrayList<>();
     private final int NO_MODS = 0;
     private final int SHIFT_MOD = 1;
     private final int CTRL_MOD = 2;
@@ -100,6 +101,13 @@ public class EditorHandler {
 
     public EditorMenu getCurrentMenu(){
         return currentMenu;
+    }
+
+    public List<ParticlePoint> getClipboard() { return clipboard; }
+
+    public void setClipboard(List<ParticlePoint> points) {
+        this.clipboard.clear();
+        this.clipboard.addAll(points);
     }
 
     public void changeCurrentMenu(EditorMenu menu, Routine routine){

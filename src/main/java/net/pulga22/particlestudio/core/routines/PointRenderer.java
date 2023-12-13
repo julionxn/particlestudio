@@ -16,8 +16,8 @@ public class PointRenderer {
     private static final Identifier PARTICLE_POINT_TEXTURE = new Identifier(ParticleStudio.MOD_ID, "points/point.png");
     private static final Identifier SELECTED_POINT_TEXTURE = new Identifier(ParticleStudio.MOD_ID, "points/selected.png");
 
-    public static void renderParticlePoint(WorldRenderContext context, Vec3d targetPosition){
-        renderBillboardTexture(context, targetPosition, PARTICLE_POINT_TEXTURE);
+    public static void renderParticlePoint(WorldRenderContext context, Vec3d targetPosition, float gradient){
+        renderBillboardTexture(context, targetPosition, PARTICLE_POINT_TEXTURE, 0.8f, gradient, gradient);
     }
 
     public static void renderSelectedPoint(WorldRenderContext context, Vec3d targetPosition){
@@ -25,6 +25,10 @@ public class PointRenderer {
     }
 
     public static void renderBillboardTexture(WorldRenderContext context, Vec3d targetPosition, Identifier texture){
+        renderBillboardTexture(context, targetPosition, texture, 1.0f, 1.0f, 1.0f);
+    }
+
+    public static void renderBillboardTexture(WorldRenderContext context, Vec3d targetPosition, Identifier texture, float r, float g, float b){
         Camera camera = context.camera();
         Vec3d transformedPosition = targetPosition.subtract(camera.getPos());
         MatrixStack matrixStack = new MatrixStack();
@@ -41,13 +45,14 @@ public class PointRenderer {
         Matrix4f positionMatrix = matrixStack.peek().getPositionMatrix();
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder buffer = tessellator.getBuffer();
-        buffer.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_TEXTURE);
-        buffer.vertex(positionMatrix, 0, 1, 0).texture(0f, 0f).next();
-        buffer.vertex(positionMatrix, 0, 0, 0).texture(0f, 1f).next();
-        buffer.vertex(positionMatrix, 1, 0, 0).texture(1f, 1f).next();
-        buffer.vertex(positionMatrix, 1, 1, 0).texture(1f, 0f).next();
-        RenderSystem.setShader(GameRenderer::getPositionTexProgram);
+        buffer.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_TEXTURE_COLOR);
+        buffer.vertex(positionMatrix, 0, 1, 0).texture(0f, 0f).color(r, g, b, 1.0f).next();
+        buffer.vertex(positionMatrix, 0, 0, 0).texture(0f, 1f).color(r, g, b, 1.0f).next();
+        buffer.vertex(positionMatrix, 1, 0, 0).texture(1f, 1f).color(r, g, b, 1.0f).next();
+        buffer.vertex(positionMatrix, 1, 1, 0).texture(1f, 0f).color(r, g, b, 1.0f).next();
+        RenderSystem.setShader(GameRenderer::getPositionTexColorProgram);
         RenderSystem.setShaderTexture(0, texture);
+        RenderSystem.setShaderColor(r, g, b, 1.0f);
         RenderSystem.disableCull();
         tessellator.draw();
         RenderSystem.enableCull();
@@ -55,6 +60,10 @@ public class PointRenderer {
     }
 
     public static void renderLine(WorldRenderContext context, Vec3d from, Vec3d to){
+        renderLine(context, from, to, 0f, 0f, 1f);
+    }
+
+    public static void renderLine(WorldRenderContext context, Vec3d from, Vec3d to, float r, float g, float b){
         Camera camera = context.camera();
         Vec3d transformedPosition = to.subtract(camera.getPos());
         MatrixStack matrixStack = new MatrixStack();
@@ -71,10 +80,10 @@ public class PointRenderer {
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder buffer = tessellator.getBuffer();
         buffer.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR);
-        buffer.vertex(positionMatrix, 0, 1, 0).color(0f, 0f, 1f, 1f).next();
-        buffer.vertex(positionMatrix, 0, 0, 0).color(0f, 0f, 1f, 1f).next();
-        buffer.vertex(positionMatrix, 1, 0, 0).color(0f, 0f, 1f, 1f).next();
-        buffer.vertex(positionMatrix, 1, 1, 0).color(0f, 0f, 1f, 1f).next();
+        buffer.vertex(positionMatrix, 0, 1, 0).color(r, g, b, 1f).next();
+        buffer.vertex(positionMatrix, 0, 0, 0).color(r, g, b, 1f).next();
+        buffer.vertex(positionMatrix, 1, 0, 0).color(r, g, b, 1f).next();
+        buffer.vertex(positionMatrix, 1, 1, 0).color(r, g, b, 1f).next();
         RenderSystem.setShader(GameRenderer::getPositionColorProgram);
         RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
         RenderSystem.disableCull();

@@ -33,10 +33,13 @@ public class CurvePath extends Path {
     public void renderPath(WorldRenderContext context) {
         Vec3d firstPos = from;
         for (GhostPoint ghostPoint : getGhostPoints()) {
-            PointRenderer.renderLine(context, firstPos, ghostPoint.pos());
-            firstPos = ghostPoint.pos();
+            Vec3d secondPos = ghostPoint.pos();
+            PointRenderer.renderLine(context, firstPos, secondPos);
+            firstPos = secondPos;
         }
         PointRenderer.renderLine(context, firstPos, to);
+        PointRenderer.renderLine(context, from, firstControlPoint, 1f, 0f, 0f);
+        PointRenderer.renderLine(context, to, secondControlPoint, 1f, 0f, 0f);
     }
 
     @Override

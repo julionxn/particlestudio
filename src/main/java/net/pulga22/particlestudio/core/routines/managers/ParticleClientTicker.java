@@ -11,6 +11,8 @@ public class ParticleClientTicker {
     private static ParticleClientTicker instance;
     public final Set<RoutinePlayer> players = new HashSet<>();
 
+    private ParticleClientTicker(){}
+
     public static ParticleClientTicker getInstance(){
         if (instance == null) instance = new ParticleClientTicker();
         return instance;

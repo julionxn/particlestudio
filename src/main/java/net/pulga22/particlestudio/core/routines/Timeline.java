@@ -38,14 +38,15 @@ public class Timeline implements Serializable {
     }
 
     private void decreaseFrame(int in){
-        if (currentEditingTick - in < 0 || displayLength - in < actualLength) return;
-        displayLength -= in;
-        currentEditingTick -= in;
+        currentEditingTick = Math.max(0, currentEditingTick + in);
+        if (currentEditingTick >= actualLength) {
+            displayLength = currentEditingTick;
+        }
     }
 
     private void increaseFrame(int in){
-        displayLength += in;
         currentEditingTick += in;
+        displayLength = Math.max(displayLength, currentEditingTick);
     }
 
     public void adjustOnionUpperBound(int in){

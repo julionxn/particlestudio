@@ -39,16 +39,27 @@ public class Routine implements Serializable {
     }
 
     private void renderPoints(WorldRenderContext context, List<ParticlePoint> selectedPoints){
-        for (int i = timeline.onionLowerBound(); i <= timeline.onionUpperBound(); i++) {
-            List<ParticlePoint> points = timeline.getPointsOfTick(i);
+        int selectedTick = timeline.getCurrentEditingTick();
+        int lower = timeline.onionLowerBound();
+        int upper = timeline.onionUpperBound();
+        double sigma = Math.min(selectedTick - lower, upper - selectedTick) / 2.0;
+        double sigmaSquared = sigma * sigma;
+        for (int tick = lower; tick <= upper; tick++) {
+            List<ParticlePoint> points = timeline.getPointsOfTick(tick);
             points.forEach(particlePoint -> {
                 if (selectedPoints.contains(particlePoint)){
                     PointRenderer.renderSelectedPoint(context, particlePoint.getPosition());
                     return;
                 }
-                PointRenderer.renderParticlePoint(context, particlePoint.getPosition());
+                float gradient = (float) generateGradient(particlePoint.tick, selectedTick, sigmaSquared);
+                PointRenderer.renderParticlePoint(context, particlePoint.getPosition(), gradient);
             });
         }
+    }
+
+    private double generateGradient(int tick, int editing, double sigmaSquared){
+        double exponent = -Math.pow((tick - editing), 2) / (2 * sigmaSquared);
+        return 1 - Math.pow(Math.E, exponent);
     }
 
     public void addParticlePoint(EditorHandler editorHandler){
@@ -78,8 +89,8 @@ public class Routine implements Serializable {
 
     public Optional<ParticlePoint> tryToSelectPoint(PlayerEntity player) {
         if (timeline.isEmpty()) return Optional.empty();
-        return new SelectionCalculator(timeline.getPoints()
-                .subList(timeline.onionLowerBound(), timeline.onionUpperBound() + 1), player)
+        return new SelectionCalculator(
+                timeline.getPoints().subList(timeline.onionLowerBound(), timeline.onionUpperBound() + 1), player)
                 .getSelectedPoint();
     }
 
