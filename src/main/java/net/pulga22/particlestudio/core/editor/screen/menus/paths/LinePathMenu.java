@@ -2,7 +2,7 @@ package net.pulga22.particlestudio.core.editor.screen.menus.paths;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
-import net.pulga22.particlestudio.core.editor.EditorHandler;
+import net.pulga22.particlestudio.core.editor.handlers.EditorHandler;
 import net.pulga22.particlestudio.core.routines.Routine;
 
 public class LinePathMenu extends PathMenu {

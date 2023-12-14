@@ -1,6 +1,6 @@
 package net.pulga22.particlestudio.core.editor.screen.menus.paths;
 
-import net.pulga22.particlestudio.core.editor.EditorHandler;
+import net.pulga22.particlestudio.core.editor.handlers.EditorHandler;
 import net.pulga22.particlestudio.core.editor.components.Actions;
 import net.pulga22.particlestudio.core.editor.components.EditorButton;
 import net.pulga22.particlestudio.core.routines.paths.CurvePath;
@@ -16,13 +16,13 @@ public class CurvePathMenu extends PathMenu {
                         CurvePath curvePath = (CurvePath) path;
                         curvePath.setFirstControlPoint(editorHandler.getCurrentPosition());
                     });
-                }, "Set 1st control point")
+                }, "Set 1st control point", builder -> builder)
                 .setAction(Actions.E, routine -> {
                     routine.getEditingPath().ifPresent(path -> {
                         CurvePath curvePath = (CurvePath) path;
                         curvePath.setSecondControlPoint(editorHandler.getCurrentPosition());
                     });
-                }, "Set 2nd control point")
+                }, "Set 2nd control point", builder -> builder)
                 .build());
         addConfirmAndCancel();
     }

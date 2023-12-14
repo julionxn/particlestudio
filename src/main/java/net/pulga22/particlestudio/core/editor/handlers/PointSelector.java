@@ -1,4 +1,4 @@
-package net.pulga22.particlestudio.core.editor;
+package net.pulga22.particlestudio.core.editor.handlers;
 
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.Vec3d;

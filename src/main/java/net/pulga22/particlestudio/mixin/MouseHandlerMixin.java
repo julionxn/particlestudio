@@ -3,7 +3,7 @@ package net.pulga22.particlestudio.mixin;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.Mouse;
 import net.minecraft.entity.player.PlayerEntity;
-import net.pulga22.particlestudio.core.editor.Modifiers;
+import net.pulga22.particlestudio.core.editor.handlers.Modifiers;
 import net.pulga22.particlestudio.utils.mixins.PlayerEntityAccessor;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;

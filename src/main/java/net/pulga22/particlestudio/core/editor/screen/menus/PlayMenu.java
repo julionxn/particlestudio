@@ -1,6 +1,6 @@
 package net.pulga22.particlestudio.core.editor.screen.menus;
 
-import net.pulga22.particlestudio.core.editor.EditorHandler;
+import net.pulga22.particlestudio.core.editor.handlers.EditorHandler;
 import net.pulga22.particlestudio.core.editor.components.Actions;
 import net.pulga22.particlestudio.core.editor.components.EditorButton;
 import net.pulga22.particlestudio.core.editor.components.EditorMenu;
@@ -11,10 +11,10 @@ public class PlayMenu extends EditorMenu {
     public PlayMenu(EditorHandler editorHandler) {
         super(editorHandler, "Play");
         addButton(EditorButton.builder("play/routine", "Routine")
-                .setAction(Actions.Q, routine -> routine.getRoutinePlayer().play(), "Play")
-                .setAction(Actions.E, routine -> routine.getRoutinePlayer().pause(), "Pause")
-                .setAction(Actions.Z, routine -> routine.getRoutinePlayer().stop(), "Stop")
-                .setAction(Actions.C, routine -> routine.getRoutinePlayer().restart(), "Restart")
+                .setAction(Actions.Q, routine -> routine.getRoutinePlayer().play(), "Play", builder -> builder)
+                .setAction(Actions.E, routine -> routine.getRoutinePlayer().pause(), "Pause", builder -> builder)
+                .setAction(Actions.Z, routine -> routine.getRoutinePlayer().stop(), "Stop", builder -> builder)
+                .setAction(Actions.C, routine -> routine.getRoutinePlayer().restart(), "Restart", builder -> builder)
                 .build());
     }
 

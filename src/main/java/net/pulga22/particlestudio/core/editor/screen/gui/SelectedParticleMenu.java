@@ -8,8 +8,8 @@ import net.minecraft.client.util.Window;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.pulga22.particlestudio.ParticleStudio;
-import net.pulga22.particlestudio.core.editor.EditorHandler;
-import net.pulga22.particlestudio.core.editor.ScrollSubscriber;
+import net.pulga22.particlestudio.core.editor.handlers.EditorHandler;
+import net.pulga22.particlestudio.core.editor.handlers.ScrollSubscriber;
 import net.pulga22.particlestudio.core.routines.managers.ParticleRoutinesManager;
 
 import java.util.List;

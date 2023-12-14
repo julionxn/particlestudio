@@ -3,6 +3,7 @@ package net.pulga22.particlestudio.core.editor;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.entity.player.PlayerEntity;
+import net.pulga22.particlestudio.core.editor.handlers.EditorHandler;
 import net.pulga22.particlestudio.core.routines.Routine;
 import net.pulga22.particlestudio.utils.mixins.PlayerEntityAccessor;
 

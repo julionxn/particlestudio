@@ -4,7 +4,10 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.util.Identifier;
 import net.pulga22.particlestudio.ParticleStudio;
-import net.pulga22.particlestudio.core.editor.*;
+import net.pulga22.particlestudio.core.editor.handlers.EditorHandler;
+import net.pulga22.particlestudio.core.editor.handlers.KeySubscriber;
+import net.pulga22.particlestudio.core.editor.handlers.Modifiers;
+import net.pulga22.particlestudio.core.editor.handlers.ScrollSubscriber;
 import net.pulga22.particlestudio.core.routines.Routine;
 import net.pulga22.particlestudio.core.routines.Timeline;
 
@@ -81,9 +84,9 @@ public class EditorMenu implements KeySubscriber, ScrollSubscriber {
         List<EditorButtonAction> parts = activeButton.getActions();
         int y = context.getScaledWindowHeight() / 2 - ((15 * parts.size()) - 5);
         for (EditorButtonAction part : parts) {
-            context.drawTexture(part.getTexture(), 10, y, 0, 0, 0, 20, 20, 20, 20);
+            context.drawTexture(part.getTexture(editorHandler.getCurrentPhase()), 10, y, 0, 0, 0, 20, 20, 20, 20);
             context.drawTexture(OPTIONS_BORDER_TEXTURES.get(part.getAction()), 8, y - 2, 0, 0, 0, 28, 28, 28, 28);
-            context.drawTextWithShadow(client.textRenderer, part.getDescription(), 38, y + 5, 0xffffff);
+            context.drawTextWithShadow(client.textRenderer, part.getDescription(editorHandler.getCurrentPhase()), 38, y + 5, 0xffffff);
             y += 30;
         }
     }
@@ -96,14 +99,14 @@ public class EditorMenu implements KeySubscriber, ScrollSubscriber {
         }
     }
 
-    public void onKey(int key, Modifiers modifiers){
+    public void onKey(int key, Modifiers modifier){
         EditorButton currentButton = buttons.get(currentIndex);
         switch (key){
             case 258 -> onScroll(1.0);
-            case 81 -> currentButton.perform(Actions.Q, editorHandler.getRoutine());
-            case 69 -> currentButton.perform(Actions.E, editorHandler.getRoutine());
-            case 90 -> currentButton.perform(Actions.Z, editorHandler.getRoutine());
-            case 67 -> currentButton.perform(Actions.C, editorHandler.getRoutine());
+            case 81 -> currentButton.perform(Actions.Q, modifier, editorHandler.getRoutine());
+            case 69 -> currentButton.perform(Actions.E, modifier, editorHandler.getRoutine());
+            case 90 -> currentButton.perform(Actions.Z, modifier, editorHandler.getRoutine());
+            case 67 -> currentButton.perform(Actions.C, modifier, editorHandler.getRoutine());
         }
     }
 
@@ -124,7 +127,7 @@ public class EditorMenu implements KeySubscriber, ScrollSubscriber {
         editorHandler.unsubscribeToScroll(this);
     }
 
-    public void onActive(){
+    public void onActive(Routine routine){
         editorHandler.subscribeToScroll(this);
         editorHandler.subscribeToKey(this);
     }

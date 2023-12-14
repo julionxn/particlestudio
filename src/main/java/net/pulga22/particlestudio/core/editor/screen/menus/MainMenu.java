@@ -1,6 +1,6 @@
 package net.pulga22.particlestudio.core.editor.screen.menus;
 
-import net.pulga22.particlestudio.core.editor.EditorHandler;
+import net.pulga22.particlestudio.core.editor.handlers.EditorHandler;
 import net.pulga22.particlestudio.core.editor.components.Actions;
 import net.pulga22.particlestudio.core.editor.components.EditorButton;
 import net.pulga22.particlestudio.core.editor.components.EditorMenu;
@@ -12,15 +12,15 @@ public class MainMenu extends EditorMenu {
         addButton(EditorButton.builder("timeline", "Timeline")
                 .setAction(Actions.Q,
                         routine -> editorHandler.changeMenu(new TimelineMenu(editorHandler)),
-                        "Entrar").build());
-        addButton(EditorButton.builder("tools", "Herramientas")
+                        "Entrar", builder -> builder).build());
+        addButton(EditorButton.builder("tools", "Tools")
                 .setAction(Actions.Q,
                         routine -> editorHandler.changeMenu(new ToolsMenu(editorHandler)),
-                        "Entrar").build());
+                        "Entrar", builder -> builder).build());
         addButton(EditorButton.builder("play", "Play")
                 .setAction(Actions.Q,
                         routine -> editorHandler.changeMenu(new PlayMenu(editorHandler)),
-                        "Entrar").build());
+                        "Entrar", builder -> builder).build());
     }
 
 }

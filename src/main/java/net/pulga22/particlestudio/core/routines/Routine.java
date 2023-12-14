@@ -3,8 +3,9 @@ package net.pulga22.particlestudio.core.routines;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.Vec3d;
-import net.pulga22.particlestudio.core.editor.EditorHandler;
-import net.pulga22.particlestudio.core.editor.PointSelector;
+import net.pulga22.particlestudio.core.editor.handlers.EditorHandler;
+import net.pulga22.particlestudio.core.editor.handlers.PointSelector;
+import net.pulga22.particlestudio.core.editor.handlers.SelectionHandler;
 import net.pulga22.particlestudio.core.routines.paths.Path;
 
 import java.io.*;
@@ -16,6 +17,7 @@ public class Routine implements Serializable {
 
     private final Timeline timeline = new Timeline();
     private transient RoutinePlayer routinePlayer = new RoutinePlayer(this);
+    private transient SelectionHandler selectionHandler;
     private transient Path editingPath;
 
     public Timeline getTimeline(){
@@ -23,8 +25,13 @@ public class Routine implements Serializable {
     }
 
     public RoutinePlayer getRoutinePlayer(){
-        if (this.routinePlayer == null) this.routinePlayer = new RoutinePlayer(this);
+        if (routinePlayer == null) routinePlayer = new RoutinePlayer(this);
         return routinePlayer;
+    }
+
+    public SelectionHandler getSelectionHandler(){
+        if (selectionHandler == null) selectionHandler = new SelectionHandler();
+        return selectionHandler;
     }
 
     public void render(WorldRenderContext context, List<ParticlePoint> selectedPoints){
@@ -77,7 +84,7 @@ public class Routine implements Serializable {
         editingPath = path;
     }
 
-    public void clearRoutine(){
+    public void clearPath(){
         editingPath = null;
     }
 

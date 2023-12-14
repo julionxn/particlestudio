@@ -32,7 +32,7 @@ public class ParticleStudioClient implements ClientModInitializer {
             PlayerEntityAccessor accessor = (PlayerEntityAccessor) client.player;
             if (accessor == null || !accessor.particlestudio$isEditing()) return;
             PlayerEditor playerEditor  = accessor.particlestudio$getEditor();
-            playerEditor.getCurrentRoutine().ifPresent(routine -> routine.render(context, playerEditor.getHandler().getSelectionHandler().get()));
+            playerEditor.getCurrentRoutine().ifPresent(routine -> routine.render(context, playerEditor.getHandler().getRoutine().getSelectionHandler().get()));
         });
         ClientTickEvents.END_WORLD_TICK.register(world -> ParticleClientTicker.getInstance().tick(world));
     }
