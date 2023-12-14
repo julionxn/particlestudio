@@ -4,6 +4,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.entity.player.PlayerEntity;
 import net.pulga22.particlestudio.core.routines.Routine;
+import net.pulga22.particlestudio.utils.mixins.PlayerEntityAccessor;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -12,13 +13,14 @@ import java.util.Set;
 
 public class PlayerEditor {
 
-    private final EditorHandler editorHandler;
     private final HashMap<String, Routine> loadedRoutines = new HashMap<>();
     private Set<String> routineNames = new HashSet<>();
     private Routine currentRoutine = null;
+    private EditorHandler editorHandler;
+    private final PlayerEntity player;
 
     public PlayerEditor(PlayerEntity player){
-        this.editorHandler = new EditorHandler(this, player);
+        this.player = player;
     }
 
     public EditorHandler getHandler(){
@@ -42,6 +44,19 @@ public class PlayerEditor {
         if (routineNames.contains(name)) return;
         loadRoutine(name, new Routine());
         routineNames.add(name);
+    }
+
+    public void openEditor(){
+        if (currentRoutine == null) return;
+        PlayerEntityAccessor accessor = (PlayerEntityAccessor) player;
+        accessor.particlestudio$setEditing(true);
+        editorHandler = new EditorHandler(this, player, currentRoutine);
+    }
+
+    public void closeEditor(){
+        PlayerEntityAccessor accessor = (PlayerEntityAccessor) player;
+        accessor.particlestudio$setEditing(false);
+        editorHandler = null;
     }
 
     public Optional<Routine> getCurrentRoutine(){

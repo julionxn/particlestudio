@@ -3,6 +3,7 @@ package net.pulga22.particlestudio.mixin;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.Mouse;
 import net.minecraft.entity.player.PlayerEntity;
+import net.pulga22.particlestudio.core.editor.Modifiers;
 import net.pulga22.particlestudio.utils.mixins.PlayerEntityAccessor;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -23,7 +24,7 @@ public abstract class MouseHandlerMixin {
         PlayerEntityAccessor accessor = (PlayerEntityAccessor) player;
         if (!accessor.particlestudio$isEditing()) return;
         if (window == client.getWindow().getHandle()){
-            accessor.particlestudio$getEditor().getHandler().handleMouseScroll(vertical);
+            accessor.particlestudio$getEditor().getHandler().onMouseWheel(vertical);
         }
         ci.cancel();
     }
@@ -35,7 +36,7 @@ public abstract class MouseHandlerMixin {
         if (player == null) return;
         PlayerEntityAccessor accessor = (PlayerEntityAccessor) player;
         if (!accessor.particlestudio$isEditing()) return;
-        accessor.particlestudio$getEditor().getHandler().handleRightClick(player, mods);
+        accessor.particlestudio$getEditor().getHandler().onRightClick(Modifiers.getModifier(mods));
     }
 
 }

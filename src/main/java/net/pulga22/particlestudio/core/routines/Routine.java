@@ -4,7 +4,7 @@ import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.Vec3d;
 import net.pulga22.particlestudio.core.editor.EditorHandler;
-import net.pulga22.particlestudio.core.editor.SelectionCalculator;
+import net.pulga22.particlestudio.core.editor.PointSelector;
 import net.pulga22.particlestudio.core.routines.paths.Path;
 
 import java.io.*;
@@ -63,11 +63,9 @@ public class Routine implements Serializable {
     }
 
     public void addParticlePoint(EditorHandler editorHandler){
-        PlayerEntity player = editorHandler.getPlayer();
-        if (player == null) return;
-        Vec3d pos = player.getPos();
+        Vec3d pos = editorHandler.getCurrentPosition();
         int tick = timeline.getCurrentEditingTick();
-        addParticlePoint(tick, new ParticlePoint(editorHandler.getSelectedParticle(), pos.x, pos.y, pos.z, tick));
+        addParticlePoint(tick, new ParticlePoint(editorHandler.getCurrentParticle(), pos.x, pos.y, pos.z, tick));
     }
 
     public void addParticlePoint(int time, ParticlePoint particlePoint){
@@ -89,7 +87,7 @@ public class Routine implements Serializable {
 
     public Optional<ParticlePoint> tryToSelectPoint(PlayerEntity player) {
         if (timeline.isEmpty()) return Optional.empty();
-        return new SelectionCalculator(
+        return new PointSelector(
                 timeline.getPoints().subList(timeline.onionLowerBound(), timeline.onionUpperBound() + 1), player)
                 .getSelectedPoint();
     }

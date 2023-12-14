@@ -1,130 +1,117 @@
 package net.pulga22.particlestudio.core.editor;
 
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.math.Vec3d;
 import net.pulga22.particlestudio.core.editor.components.EditorMenu;
 import net.pulga22.particlestudio.core.editor.screen.menus.MainMenu;
-import net.pulga22.particlestudio.core.editor.screen.menus.PointMenu;
-import net.pulga22.particlestudio.core.routines.ParticlePoint;
 import net.pulga22.particlestudio.core.routines.Routine;
-import net.pulga22.particlestudio.utils.mixins.PlayerEntityAccessor;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.Stack;
 
 public class EditorHandler {
 
-    private final PlayerEditor playerEditor;
+    private final PlayerEditor editor;
     private final PlayerEntity player;
-    private EditorMenu currentMenu = new MainMenu(this);
-    private ScrollSubscriber subscriber;
-    private String selectedParticle = "minecraft:happy_villager";
-    private final List<ParticlePoint> selectedPoints = new ArrayList<>();
-    private final List<ParticlePoint> clipboard = new ArrayList<>();
-    private final int NO_MODS = 0;
-    private final int SHIFT_MOD = 1;
-    private final int CTRL_MOD = 2;
+    private String currentParticle = "minecraft:happy_villager";
+    private final SelectionHandler selectionHandler = new SelectionHandler();
+    private final Stack<EditorMenu> menuStack = new Stack<>();
+    private boolean scrollActive = true;
+    private final Set<KeySubscriber> keySubscribers = new HashSet<>();
+    private final Set<ScrollSubscriber> scrollSubscribers = new HashSet<>();
+    private final Routine routine;
 
-    public EditorHandler(PlayerEditor playerEditor, PlayerEntity player) {
-        this.playerEditor = playerEditor;
+    public EditorHandler(PlayerEditor playerEditor, PlayerEntity player, Routine routine) {
+        this.editor = playerEditor;
         this.player = player;
+        this.routine = routine;
+        MainMenu menu = new MainMenu(this);
+        this.menuStack.push(menu);
+        menu.onActive();
     }
 
-    public void handleRightClick(PlayerEntity player, int mods){
-        playerEditor.getCurrentRoutine().ifPresent(routine -> routine.tryToSelectPoint(player).ifPresent(particlePoint -> {
-            if (selectedPoints.contains(particlePoint)){
-                selectedPoints.remove(particlePoint);
-                if (selectedPoints.isEmpty()) changeCurrentMenu(new MainMenu(this), routine);
-                return;
-            }
-            if (selectedPoints.isEmpty()) {
-                changeCurrentMenu(new PointMenu(currentMenu, this), routine);
-            }
-            switch (mods){
-                case NO_MODS -> {
-                    selectedPoints.clear();
-                    selectedPoints.add(particlePoint);
-                }
-                case SHIFT_MOD, CTRL_MOD -> selectedPoints.add(particlePoint);
-            }
-        }));
+    public void onRightClick(Modifiers modifier){
+
     }
 
-    public void handleMouseScroll(double vertical){
-        if (subscriber != null) {
-            subscriber.handleScroll(vertical);
+    public void onKey(int key, Modifiers modifier){
+        switch (key){
+            case 256 -> returnMenu();
+            case 75 -> editor.closeEditor();
+            default -> keySubscribers.forEach(keySubscriber -> keySubscriber.onKey(key, modifier));
+        }
+    }
+
+    public void onMouseWheel(double vertical){
+        if (!scrollActive) return;
+        scrollSubscribers.forEach(scrollSubscribers -> scrollSubscribers.onScroll(vertical));
+    }
+
+    public String getCurrentParticle(){
+        return currentParticle;
+    }
+
+    public void changeCurrentParticle(String particle){
+        currentParticle = particle;
+    }
+
+    public SelectionHandler getSelectionHandler(){
+        return selectionHandler;
+    }
+
+    public Vec3d getCurrentPosition(){
+        return player.getPos();
+    }
+
+    public void changeMenu(EditorMenu menu){
+        menuStack.peek().onChange(routine);
+        menuStack.push(menu);
+        menu.onActive();
+    }
+
+    public void returnMenu(){
+        EditorMenu currentMenu = menuStack.pop();
+        currentMenu.onChange(routine);
+        currentMenu.onExit(routine);
+        if (menuStack.isEmpty()) {
+            editor.closeEditor();
             return;
         }
-        currentMenu.handleMouseScroll(vertical);
+        menuStack.peek().onActive();
     }
 
-    public void handleKeyboard(int key){
-        Optional<Routine> routineOptional = playerEditor.getCurrentRoutine();
-        final int ESCAPE_KEY = 256;
-        final int k_KEY = 75;
-        final int TAB_KEY = 258;
-        switch (key){
-            case ESCAPE_KEY -> {
-                EditorMenu prevMenu = currentMenu.getPreviousMenu();
-                if (prevMenu != null){
-                    routineOptional.ifPresent(routine -> changeCurrentMenu(prevMenu, routine));
-                } else {
-                    exitEditor();
-                }
-            }
-            case k_KEY -> exitEditor();
-            case TAB_KEY -> handleMouseScroll(1.0);
-            default -> routineOptional.ifPresent(routine -> currentMenu.handleKeyboardInput(key, routine));
+    public void returnTimesMenu(int times){
+        for (int i = 0; i < times; i++) {
+            returnMenu();
         }
-    }
-
-    private void exitEditor(){
-        PlayerEntityAccessor accessor = (PlayerEntityAccessor) player;
-        accessor.particlestudio$setEditing(false);
-    }
-
-    public void changeSelectedParticle(String particle){
-        selectedParticle = particle;
-    }
-
-    public String getSelectedParticle(){
-        return selectedParticle;
-    }
-
-    public List<ParticlePoint> getSelectedPoints(){
-        return selectedPoints;
-    }
-
-    public PlayerEntity getPlayer(){
-        return player;
     }
 
     public EditorMenu getCurrentMenu(){
-        return currentMenu;
+        return menuStack.peek();
     }
 
-    public List<ParticlePoint> getClipboard() { return clipboard; }
-
-    public void setClipboard(List<ParticlePoint> points) {
-        this.clipboard.clear();
-        this.clipboard.addAll(points);
+    public void setScrollActive(boolean active){
+        scrollActive = active;
     }
 
-    public void changeCurrentMenu(EditorMenu menu, Routine routine){
-        if (currentMenu instanceof PointMenu) {
-            selectedPoints.clear();
-        }
-        currentMenu.onExit(routine);
-        this.currentMenu = menu;
+    public void subscribeToKey(KeySubscriber menu){
+        keySubscribers.add(menu);
     }
 
-    public void subscribeToScroll(ScrollSubscriber subscriber){
-        this.subscriber = subscriber;
+    public void unsubscribeToKey(KeySubscriber menu){
+        keySubscribers.remove(menu);
+    }
+
+    public void subscribeToScroll(ScrollSubscriber menu){
+        scrollSubscribers.add(menu);
     }
 
     public void unsubscribeToScroll(ScrollSubscriber menu){
-        if (subscriber != menu) return;
-        subscriber = null;
+        scrollSubscribers.remove(menu);
     }
 
+    public Routine getRoutine() {
+        return routine;
+    }
 }

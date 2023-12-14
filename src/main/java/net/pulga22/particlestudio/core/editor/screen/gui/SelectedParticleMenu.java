@@ -16,16 +16,16 @@ import java.util.List;
 
 public class SelectedParticleMenu extends Screen implements ScrollSubscriber {
 
-    private final EditorHandler handler;
+    private final EditorHandler editorHandler;
     private final List<String> allParticlesIds;
     private final int particlesButtons;
     private int startingParticleIndex = 0;
     private int buttonsToDisplay = 1;
 
-    public SelectedParticleMenu(EditorHandler handler) {
+    public SelectedParticleMenu(EditorHandler editorHandler) {
         super(Text.of("SelectedParticleMenu"));
-        this.handler = handler;
-        handler.subscribeToScroll(this);
+        this.editorHandler = editorHandler;
+        editorHandler.subscribeToScroll(this);
         allParticlesIds = ParticleRoutinesManager.getInstance().getAllParticleIds();
         particlesButtons = ParticleRoutinesManager.getInstance().getParticlesAmount();
     }
@@ -49,7 +49,7 @@ public class SelectedParticleMenu extends Screen implements ScrollSubscriber {
 
         ButtonWidget search = ButtonWidget.builder(Text.of("Set"), button -> {
             String selected = textFieldWidget.getText();
-            ParticleRoutinesManager.getInstance().getParticleType(selected).ifPresent(particleType -> handler.changeSelectedParticle(selected));
+            ParticleRoutinesManager.getInstance().getParticleType(selected).ifPresent(particleType -> editorHandler.changeCurrentParticle(selected));
         }).dimensions(x + 121, y - 23, 60, 20).build();
         addDrawableChild(search);
 
@@ -60,7 +60,7 @@ public class SelectedParticleMenu extends Screen implements ScrollSubscriber {
         addDrawableChild(upButton);
         for (int i = startingParticleIndex; i - startingParticleIndex < buttonsToDisplay; i++){
             String id = allParticlesIds.get(i);
-            ParticleButtonOption buttonOption = ParticleButtonOption.builder(this, id, button -> handler.changeSelectedParticle(id)).position(x, y).size(180, 20).build();
+            ParticleButtonOption buttonOption = ParticleButtonOption.builder(this, id, button -> editorHandler.changeCurrentParticle(id)).position(x, y).size(180, 20).build();
             addDrawableChild(buttonOption);
             y += 20;
         }
@@ -89,7 +89,7 @@ public class SelectedParticleMenu extends Screen implements ScrollSubscriber {
                 );
         if (client == null) return;
         context.drawCenteredTextWithShadow(client.textRenderer,
-                "Actual: " + handler.getSelectedParticle(),
+                "Actual: " + editorHandler.getCurrentParticle(),
                 x, y - (buttonsToDisplay * 5) - 50, 0xffffff);
     }
 
@@ -100,19 +100,19 @@ public class SelectedParticleMenu extends Screen implements ScrollSubscriber {
     }
 
     public String getSelectedParticle(){
-        return handler.getSelectedParticle();
-    }
-
-    @Override
-    public void handleScroll(double vertical) {
-        adjustParticleIndex((int) -vertical);
-        clearAndInit();
+        return editorHandler.getCurrentParticle();
     }
 
     @Override
     public void close() {
         super.close();
-        handler.unsubscribeToScroll(this);
+        editorHandler.setScrollActive(true);
+        editorHandler.unsubscribeToScroll(this);
     }
 
+    @Override
+    public void onScroll(double vertical) {
+        adjustParticleIndex((int) -vertical);
+        clearAndInit();
+    }
 }

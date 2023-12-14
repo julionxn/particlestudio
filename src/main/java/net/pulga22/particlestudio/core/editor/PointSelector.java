@@ -7,15 +7,15 @@ import net.pulga22.particlestudio.core.routines.ParticlePoint;
 import java.util.List;
 import java.util.Optional;
 
-public class SelectionCalculator {
+public class PointSelector {
 
     private final Vec3d currentLocation;
-    private double leastDistance = Double.POSITIVE_INFINITY;
+    private double selectedPointSqDistance = 1600;
     private ParticlePoint selectedPoint;
     private final Vec3d playerLookingVector;
     private static final double TWO_PI = 6.283185;
 
-    public SelectionCalculator(List<List<ParticlePoint>> points, PlayerEntity player){
+    public PointSelector(List<List<ParticlePoint>> points, PlayerEntity player){
         double standardPitch = clampAngle(Math.toRadians(player.getPitch()));
         double standardYaw = clampAngle(Math.toRadians(player.getYaw()));
         this.currentLocation = player.getPos().add(0, 1.5, 0);
@@ -36,18 +36,16 @@ public class SelectionCalculator {
     }
 
     private void pickPoint(List<List<ParticlePoint>> points){
-        points.forEach(pointOfTick -> {
-            pointOfTick.forEach(particlePoint -> {
-                Vec3d playerToPointVector = currentLocation.subtract(particlePoint.getPosition());
-                double distance = playerToPointVector.length();
-                playerToPointVector = playerToPointVector.normalize();
-                double lookness = playerToPointVector.dotProduct(playerLookingVector);
-                if (lookness > 0.997 && distance < leastDistance){
-                    selectedPoint = particlePoint;
-                    leastDistance = distance;
-                }
-            });
-        });
+        points.forEach(pointOfTick -> pointOfTick.forEach(particlePoint -> {
+            Vec3d playerToPointVector = currentLocation.subtract(particlePoint.getPosition());
+            double sqDistance = playerToPointVector.lengthSquared();
+            if (sqDistance >= selectedPointSqDistance) return;
+            double dot = playerToPointVector.normalize().dotProduct(playerLookingVector);
+            if (dot > 0.997){
+                selectedPoint = particlePoint;
+                selectedPointSqDistance = sqDistance;
+            }
+        }));
     }
 
     public Optional<ParticlePoint> getSelectedPoint(){

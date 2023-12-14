@@ -4,7 +4,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.util.Identifier;
 import net.pulga22.particlestudio.ParticleStudio;
-import net.pulga22.particlestudio.core.editor.EditorHandler;
+import net.pulga22.particlestudio.core.editor.*;
 import net.pulga22.particlestudio.core.routines.Routine;
 import net.pulga22.particlestudio.core.routines.Timeline;
 
@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class EditorMenu {
+public class EditorMenu implements KeySubscriber, ScrollSubscriber {
 
     private static final Identifier ACTIVE_BUTTON_TEXTURE = of("active.png");
     private static final Identifier BORDER_BUTTON_TEXTURE = of("border.png");
@@ -24,12 +24,10 @@ public class EditorMenu {
     }};
     private final List<EditorButton> buttons = new ArrayList<>();
     private int currentIndex = 0;
-    private final EditorMenu previousMenu;
     protected final EditorHandler editorHandler;
     private final String menuName;
 
-    public EditorMenu(EditorMenu previousMenu, EditorHandler editorHandler, String menuName){
-        this.previousMenu = previousMenu;
+    public EditorMenu(EditorHandler editorHandler, String menuName){
         this.editorHandler = editorHandler;
         this.menuName = menuName;
     }
@@ -90,17 +88,7 @@ public class EditorMenu {
         }
     }
 
-    public void handleKeyboardInput(int key, Routine routine){
-        EditorButton currentButton = buttons.get(currentIndex);
-        switch (key){
-            case 81 -> currentButton.perform(Actions.Q, routine);
-            case 69 -> currentButton.perform(Actions.E, routine);
-            case 90 -> currentButton.perform(Actions.Z, routine);
-            case 67 -> currentButton.perform(Actions.C, routine);
-        }
-    }
-
-    public void handleMouseScroll(double vertical){
+    public void onScroll(double vertical){
         if (vertical > 0) {
             currentIndex = (currentIndex < buttons.size() - 1) ? currentIndex + 1 : 0;
         } else if (vertical < 0) {
@@ -108,12 +96,19 @@ public class EditorMenu {
         }
     }
 
-    protected void addButton(EditorButton button){
-        this.buttons.add(button);
+    public void onKey(int key, Modifiers modifiers){
+        EditorButton currentButton = buttons.get(currentIndex);
+        switch (key){
+            case 258 -> onScroll(1.0);
+            case 81 -> currentButton.perform(Actions.Q, editorHandler.getRoutine());
+            case 69 -> currentButton.perform(Actions.E, editorHandler.getRoutine());
+            case 90 -> currentButton.perform(Actions.Z, editorHandler.getRoutine());
+            case 67 -> currentButton.perform(Actions.C, editorHandler.getRoutine());
+        }
     }
 
-    public EditorMenu getPreviousMenu(){
-        return previousMenu;
+    protected void addButton(EditorButton button){
+        this.buttons.add(button);
     }
 
     protected static Identifier of(String path){
@@ -122,6 +117,16 @@ public class EditorMenu {
 
     public void onExit(Routine routine){
 
+    }
+
+    public void onChange(Routine routine){
+        editorHandler.unsubscribeToKey(this);
+        editorHandler.unsubscribeToScroll(this);
+    }
+
+    public void onActive(){
+        editorHandler.subscribeToScroll(this);
+        editorHandler.subscribeToKey(this);
     }
 
 }

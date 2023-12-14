@@ -5,6 +5,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.PacketByteBuf;
+import net.pulga22.particlestudio.core.editor.PlayerEditor;
 import net.pulga22.particlestudio.core.routines.Routine;
 import net.pulga22.particlestudio.utils.mixins.PlayerEntityAccessor;
 
@@ -21,9 +22,10 @@ public class S2CReceiveRoutineSync {
         routineOptional.ifPresent(routine -> {
             client.execute(() -> {
                 PlayerEntityAccessor accessor = (PlayerEntityAccessor) player;
-                accessor.particlestudio$getEditor().loadRoutine(name, routine);
-                accessor.particlestudio$getEditor().setActiveRoutine(routine);
-                accessor.particlestudio$setEditing(true);
+                PlayerEditor editor = accessor.particlestudio$getEditor();
+                editor.loadRoutine(name, routine);
+                editor.setActiveRoutine(routine);
+                editor.openEditor();
             });
         });
 

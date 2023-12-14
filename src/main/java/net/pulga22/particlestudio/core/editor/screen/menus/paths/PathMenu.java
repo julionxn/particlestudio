@@ -2,16 +2,16 @@ package net.pulga22.particlestudio.core.editor.screen.menus.paths;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
-import net.pulga22.particlestudio.core.editor.components.Actions;
 import net.pulga22.particlestudio.core.editor.EditorHandler;
+import net.pulga22.particlestudio.core.editor.components.Actions;
 import net.pulga22.particlestudio.core.editor.components.EditorButton;
 import net.pulga22.particlestudio.core.editor.components.EditorMenu;
 import net.pulga22.particlestudio.core.routines.Routine;
 
 public class PathMenu extends EditorMenu {
 
-    public PathMenu(EditorMenu previousMenu, EditorHandler editorHandler, String name) {
-        super(previousMenu, editorHandler, name);
+    public PathMenu(EditorHandler editorHandler, String name) {
+        super(editorHandler, name);
     }
 
     @Override
@@ -29,15 +29,15 @@ public class PathMenu extends EditorMenu {
 
     protected void confirm(Routine routine){
         routine.getEditingPath().ifPresent(path -> {
-            path.apply(routine, editorHandler.getSelectedParticle());
+            path.apply(routine, editorHandler.getCurrentParticle());
             routine.clearRoutine();
-            editorHandler.changeCurrentMenu(getPreviousMenu().getPreviousMenu(), routine);
+            editorHandler.returnTimesMenu(2);
         });
     }
 
-    protected void cancel(EditorHandler editorHandler, Routine routine){
+    protected void cancel(Routine routine){
         routine.clearRoutine();
-        editorHandler.changeCurrentMenu(getPreviousMenu(), routine);
+        editorHandler.returnMenu();
     }
 
     protected void addDensity(){
@@ -49,10 +49,10 @@ public class PathMenu extends EditorMenu {
                 .build());
     }
 
-    protected void addConfirmAndCancel(EditorHandler editorHandler){
+    protected void addConfirmAndCancel(){
         addButton(EditorButton.builder("points/paths/actions", "Actions")
                 .setAction(Actions.Q, this::confirm, "Confirm")
-                .setAction(Actions.E, routine -> cancel(editorHandler, routine), "Cancel")
+                .setAction(Actions.E, this::cancel, "Cancel")
                 .build());
     }
 

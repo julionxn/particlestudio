@@ -25,7 +25,7 @@ public class ParticleController extends Item {
                 openMainMenu(player);
             } else {
                 PlayerEditor editor = accessor.particlestudio$getEditor();
-                editor.getCurrentRoutine().ifPresentOrElse(routine -> accessor.particlestudio$setEditing(true), () -> openMainMenu(player));
+                editor.getCurrentRoutine().ifPresentOrElse(routine -> accessor.particlestudio$getEditor().openEditor(), () -> openMainMenu(player));
             }
         }
         return super.use(world, player, hand);
