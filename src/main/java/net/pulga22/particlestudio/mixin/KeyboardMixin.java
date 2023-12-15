@@ -5,6 +5,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.player.PlayerEntity;
 import net.pulga22.particlestudio.core.editor.handlers.EditorHandler;
 import net.pulga22.particlestudio.core.editor.handlers.Modifiers;
+import net.pulga22.particlestudio.utils.mixins.Keys;
 import net.pulga22.particlestudio.utils.mixins.PlayerEntityAccessor;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -21,11 +22,11 @@ public abstract class KeyboardMixin {
 
     @Shadow @Final private MinecraftClient client;
     @Unique
-    private final Set<Integer> keysToHandle = Set.of(256, 81, 69, 90, 67, 75, 258, 340, 341);
+    private final Set<Integer> handledKeys = Set.of(Keys.ESC, Keys.TAB, Keys.SHIFT, Keys.CTRL, Keys.K, Keys.Q, Keys.E, Keys.Z, Keys.C);
 
     @Inject(method = "onKey", at = @At("TAIL"))
     public void handleInput(long window, int key, int scancode, int action, int modifiers, CallbackInfo ci){
-        if (!keysToHandle.contains(key)) return;
+        if (!handledKeys.contains(key)) return;
         PlayerEntity player = client.player;
         if (player == null) return;
         PlayerEntityAccessor accessor = (PlayerEntityAccessor) player;
@@ -35,8 +36,8 @@ public abstract class KeyboardMixin {
             case 0 -> handler.setCurrentPhase(Modifiers.NONE);
             case 1, 2 -> {
                 switch (key){
-                    case 340 -> handler.setCurrentPhase(Modifiers.SHIFT);
-                    case 341 -> handler.setCurrentPhase(Modifiers.CTRL);
+                    case Keys.SHIFT -> handler.setCurrentPhase(Modifiers.SHIFT);
+                    case Keys.CTRL -> handler.setCurrentPhase(Modifiers.CTRL);
                 }
             }
         }

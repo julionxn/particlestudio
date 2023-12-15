@@ -8,6 +8,7 @@ import net.pulga22.particlestudio.core.editor.screen.menus.MainMenu;
 import net.pulga22.particlestudio.core.editor.screen.menus.PointMenu;
 import net.pulga22.particlestudio.core.routines.ParticlePoint;
 import net.pulga22.particlestudio.core.routines.Routine;
+import net.pulga22.particlestudio.utils.mixins.Keys;
 
 import java.util.HashSet;
 import java.util.List;
@@ -58,8 +59,8 @@ public class EditorHandler {
 
     public void onKey(int key){
         switch (key){
-            case 256 -> returnMenu();
-            case 75 -> editor.closeEditor();
+            case Keys.ESC -> returnMenu();
+            case Keys.K -> editor.closeEditor();
             default -> keySubscribers.forEach(keySubscriber -> keySubscriber.onKey(key, currentPhase));
         }
     }

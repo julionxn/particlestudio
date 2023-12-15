@@ -10,6 +10,7 @@ import net.pulga22.particlestudio.core.editor.handlers.Modifiers;
 import net.pulga22.particlestudio.core.editor.handlers.ScrollSubscriber;
 import net.pulga22.particlestudio.core.routines.Routine;
 import net.pulga22.particlestudio.core.routines.Timeline;
+import net.pulga22.particlestudio.utils.mixins.Keys;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -102,11 +103,11 @@ public class EditorMenu implements KeySubscriber, ScrollSubscriber {
     public void onKey(int key, Modifiers modifier){
         EditorButton currentButton = buttons.get(currentIndex);
         switch (key){
-            case 258 -> onScroll(1.0);
-            case 81 -> currentButton.perform(Actions.Q, modifier, editorHandler.getRoutine());
-            case 69 -> currentButton.perform(Actions.E, modifier, editorHandler.getRoutine());
-            case 90 -> currentButton.perform(Actions.Z, modifier, editorHandler.getRoutine());
-            case 67 -> currentButton.perform(Actions.C, modifier, editorHandler.getRoutine());
+            case Keys.TAB -> onScroll(1.0);
+            case Keys.Q -> currentButton.perform(Actions.Q, modifier, editorHandler.getRoutine());
+            case Keys.E -> currentButton.perform(Actions.E, modifier, editorHandler.getRoutine());
+            case Keys.Z -> currentButton.perform(Actions.Z, modifier, editorHandler.getRoutine());
+            case Keys.C -> currentButton.perform(Actions.C, modifier, editorHandler.getRoutine());
         }
     }
 
