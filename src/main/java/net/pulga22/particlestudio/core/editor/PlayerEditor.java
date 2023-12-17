@@ -82,7 +82,7 @@ public class PlayerEditor {
         routinesToLoad.put(uuid, new PartialRoutine(uuid));
     }
 
-    public void load(int index, boolean end, UUID uuid, byte[] data){
+    public void loadChunk(int index, boolean end, UUID uuid, byte[] data){
         PartialRoutine routineToSave = routinesToLoad.get(uuid);
         routineToSave.appendBytes(index, data);
         if (end){

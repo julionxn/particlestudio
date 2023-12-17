@@ -9,10 +9,7 @@ import net.pulga22.particlestudio.core.editor.handlers.SelectionHandler;
 import net.pulga22.particlestudio.core.routines.paths.Path;
 
 import java.io.*;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 public class Routine implements Serializable {
 
@@ -117,24 +114,30 @@ public class Routine implements Serializable {
         editorHandler.saveRoutine(this);
     }
 
-    public static Optional<byte[][]> serialize(Routine routine){
-        try (ByteArrayOutputStream bos = new ByteArrayOutputStream();
-             ObjectOutputStream oos = new ObjectOutputStream(bos)) {
+    public static Optional<byte[]> serialize(Routine routine){
+        try (ByteArrayOutputStream baos = new ByteArrayOutputStream();
+             ObjectOutputStream oos = new ObjectOutputStream(baos)) {
             oos.writeObject(routine);
-            byte[] array = bos.toByteArray();
-            int chunkSize = 1024;
-            int chunksAmount = (int) Math.ceil((double) array.length / chunkSize);
-            byte[][] result = new byte[chunksAmount][];
-            for (int i = 0; i < chunksAmount; i++) {
-                int start = i * chunkSize;
-                int length = Math.min(array.length - start, chunkSize);
-                result[i] = new byte[length];
-                System.arraycopy(array, start, result[i], 0, length);
-            }
-            return Optional.of(result);
+            return Optional.of(baos.toByteArray());
         } catch (IOException e) {
             return Optional.empty();
         }
+    }
+
+    public static Optional<byte[][]> serializeInChunks(Routine routine){
+        Optional<byte[]> optionalBytes = serialize(routine);
+        if (optionalBytes.isEmpty()) return Optional.empty();
+        byte[] routineBytes = optionalBytes.get();
+        int chunkSize = 1024;
+        if (routineBytes.length <= chunkSize) return Optional.of(new byte[][]{routineBytes});
+        int chunksAmount = (int) Math.ceil((double) routineBytes.length / chunkSize);
+        byte[][] result = new byte[chunksAmount][];
+        for (int i = 0; i < chunksAmount; i++) {
+            int start = i * chunkSize;
+            int length = Math.min(routineBytes.length - start, chunkSize);
+            result[i] = Arrays.copyOfRange(routineBytes, start, start + length);
+        }
+        return Optional.of(result);
     }
 
     public static Optional<Routine> deserialize(byte[] serializedRoutine){

@@ -23,7 +23,7 @@ public class C2SRequestRoutineChunks {
         server.execute(() -> {
             WorldRoutines worldRoutines = ParticleRoutinesManager.getInstance().getRoutines(player.getWorld());
             if (worldRoutines == null) return;
-            worldRoutines.getRoutine(name).flatMap(Routine::serialize).ifPresent(data -> {
+            worldRoutines.getRoutine(name).flatMap(Routine::serializeInChunks).ifPresent(data -> {
                 for (int i = 0; i < data.length; i++) {
                     byte[] datum = data[i];
                     PacketByteBuf newBuf = PacketByteBufs.create();

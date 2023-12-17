@@ -154,7 +154,7 @@ public class EditorHandler {
     }
 
     public void saveRoutine(Routine routine){
-        Routine.serialize(routine).ifPresent(data -> {
+        Routine.serializeInChunks(routine).ifPresent(data -> {
             for (int i = 0; i < data.length; i++) {
                 byte[] datum = data[i];
                 PacketByteBuf buf = PacketByteBufs.create();
