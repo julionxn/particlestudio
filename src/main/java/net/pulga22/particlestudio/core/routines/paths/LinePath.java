@@ -21,22 +21,21 @@ public class LinePath extends Path {
 
     @Override
     public void calculate(List<GhostPoint> points) {
-        final float density = getDensity();
         final int duration = getDuration();
-        final int maxPoints = (int) Math.max(1, Math.floor(density));
+        final int maxPoints = (int) Math.max(1, Math.floor(getDensity()));
         final int items = Math.min(duration, maxPoints);
         final int deltaTick = (int) Math.ceil((double) duration / (maxPoints + 1));
         final int pointsPerTick = maxPoints / items;
         int remainingPoints = maxPoints - (items * pointsPerTick);
-        int currentPoint = 1;
         float deltaT = 1f / (items + 1);
+        int currentPoint = 1;
         for (int i = 0; i < items; i++) {
             int currentTick = ((i + 1) * deltaTick) + startingTick;
             for (int j = 0; j < pointsPerTick; j++) {
-                points.add(getPoint(currentTick,deltaT * currentPoint++));
+                points.add(getPoint(currentTick, deltaT * currentPoint++));
             }
             if (remainingPoints > 0){
-                points.add(getPoint(currentTick,deltaT * currentPoint++));
+                points.add(getPoint(currentTick, deltaT * currentPoint++));
                 remainingPoints--;
             }
         }

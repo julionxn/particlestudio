@@ -1,4 +1,4 @@
-package net.pulga22.particlestudio.networking.packets;
+package net.pulga22.particlestudio.networking.packets.sync;
 
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.minecraft.client.MinecraftClient;
@@ -7,18 +7,20 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.PacketByteBuf;
 import net.pulga22.particlestudio.utils.mixins.PlayerEntityAccessor;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.UUID;
 
-public class S2CReceiveRoutinesNames {
+public class S2CReceiveRoutineChunk {
     public static void onClient(MinecraftClient client, ClientPlayNetworkHandler handler, PacketByteBuf buf, PacketSender sender) {
 
         PlayerEntity player = client.player;
         if (player == null) return;
-        Set<String> names = buf.readCollection(HashSet::new, PacketByteBuf::readString);
+        int index = buf.readInt();
+        boolean end = buf.readBoolean();
+        UUID routineUUID = buf.readUuid();
+        byte[] data = buf.readByteArray();
         client.execute(() -> {
             PlayerEntityAccessor accessor = (PlayerEntityAccessor) player;
-            accessor.particlestudio$getEditor().setRoutineNames(names);
+            accessor.particlestudio$getEditor().load(index, end, routineUUID, data);
         });
 
     }

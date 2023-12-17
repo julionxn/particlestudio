@@ -1,16 +1,15 @@
 package net.pulga22.particlestudio;
 
 import net.fabricmc.api.ModInitializer;
-
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
-import net.pulga22.particlestudio.items.ParticleController;
-import net.pulga22.particlestudio.networking.AllPackets;
 import net.pulga22.particlestudio.core.routines.managers.ParticleRoutinesManager;
 import net.pulga22.particlestudio.core.routines.managers.WorldRoutines;
+import net.pulga22.particlestudio.items.ParticleController;
+import net.pulga22.particlestudio.networking.AllPackets;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

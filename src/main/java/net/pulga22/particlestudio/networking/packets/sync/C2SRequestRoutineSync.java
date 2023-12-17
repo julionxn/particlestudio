@@ -1,4 +1,4 @@
-package net.pulga22.particlestudio.networking.packets;
+package net.pulga22.particlestudio.networking.packets.sync;
 
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
@@ -7,8 +7,8 @@ import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.pulga22.particlestudio.core.routines.managers.ParticleRoutinesManager;
 import net.pulga22.particlestudio.core.routines.Routine;
+import net.pulga22.particlestudio.core.routines.managers.ParticleRoutinesManager;
 import net.pulga22.particlestudio.core.routines.managers.WorldRoutines;
 import net.pulga22.particlestudio.networking.AllPackets;
 
@@ -24,11 +24,8 @@ public class C2SRequestRoutineSync {
             if (worldRoutines == null) return;
             Optional<Routine> routineOptional = worldRoutines.getRoutine(name);
             routineOptional.ifPresent(routine -> {
-                Optional<byte[]> serializedOptional = Routine.serialize(routine);
-                serializedOptional.ifPresent(serialized -> {
-                    PacketByteBuf newBuf = PacketByteBufs.create().writeString(name).writeByteArray(serialized);
-                    ServerPlayNetworking.send(player, AllPackets.S2C_RECEIVE_ROUTINE_SYNC, newBuf);
-                });
+                ServerPlayNetworking.send(player, AllPackets.S2C_RESPONSE_ROUTINE_SYNC,
+                        PacketByteBufs.create().writeUuid(routine.uuid).writeString(name).writeInt(routine.hashCode()));
             });
         });
     }

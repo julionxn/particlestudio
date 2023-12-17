@@ -1,10 +1,10 @@
 package net.pulga22.particlestudio.core.editor.screen.menus;
 
 import net.minecraft.client.MinecraftClient;
-import net.pulga22.particlestudio.core.editor.handlers.EditorHandler;
 import net.pulga22.particlestudio.core.editor.components.Actions;
 import net.pulga22.particlestudio.core.editor.components.EditorButton;
 import net.pulga22.particlestudio.core.editor.components.EditorMenu;
+import net.pulga22.particlestudio.core.editor.handlers.EditorHandler;
 import net.pulga22.particlestudio.core.editor.screen.gui.SelectedParticleMenu;
 
 public class ToolsMenu extends EditorMenu {

@@ -1,9 +1,9 @@
 package net.pulga22.particlestudio.core.editor.screen.menus;
 
-import net.pulga22.particlestudio.core.editor.handlers.EditorHandler;
 import net.pulga22.particlestudio.core.editor.components.Actions;
 import net.pulga22.particlestudio.core.editor.components.EditorButton;
 import net.pulga22.particlestudio.core.editor.components.EditorMenu;
+import net.pulga22.particlestudio.core.editor.handlers.EditorHandler;
 import net.pulga22.particlestudio.core.editor.screen.menus.paths.CurvePathMenu;
 import net.pulga22.particlestudio.core.editor.screen.menus.paths.LinePathMenu;
 import net.pulga22.particlestudio.core.routines.ParticlePoint;

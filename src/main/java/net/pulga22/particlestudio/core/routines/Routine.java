@@ -12,13 +12,23 @@ import java.io.*;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.UUID;
 
 public class Routine implements Serializable {
 
+    public final UUID uuid;
+    public final String name;
+    public final int belongsTo;
     private final Timeline timeline = new Timeline();
-    private transient RoutinePlayer routinePlayer = new RoutinePlayer(this);
+    private transient RoutinePlayer routinePlayer;
     private transient SelectionHandler selectionHandler;
     private transient Path editingPath;
+
+    public Routine(UUID uuid, String name, int belongsTo){
+        this.uuid = uuid;
+        this.name = name;
+        this.belongsTo = belongsTo;
+    }
 
     public Timeline getTimeline(){
         return timeline;
@@ -99,11 +109,29 @@ public class Routine implements Serializable {
                 .getSelectedPoint();
     }
 
-    public static Optional<byte[]> serialize(Routine routine){
+    public void prepareToSave(EditorHandler editorHandler){
+        editorHandler.prepareSaveRoutine(this);
+    }
+
+    public void save(EditorHandler editorHandler){
+        editorHandler.saveRoutine(this);
+    }
+
+    public static Optional<byte[][]> serialize(Routine routine){
         try (ByteArrayOutputStream bos = new ByteArrayOutputStream();
              ObjectOutputStream oos = new ObjectOutputStream(bos)) {
             oos.writeObject(routine);
-            return Optional.of(bos.toByteArray());
+            byte[] array = bos.toByteArray();
+            int chunkSize = 1024;
+            int chunksAmount = (int) Math.ceil((double) array.length / chunkSize);
+            byte[][] result = new byte[chunksAmount][];
+            for (int i = 0; i < chunksAmount; i++) {
+                int start = i * chunkSize;
+                int length = Math.min(array.length - start, chunkSize);
+                result[i] = new byte[length];
+                System.arraycopy(array, start, result[i], 0, length);
+            }
+            return Optional.of(result);
         } catch (IOException e) {
             return Optional.empty();
         }

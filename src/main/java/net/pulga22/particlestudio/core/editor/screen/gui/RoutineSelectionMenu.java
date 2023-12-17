@@ -16,11 +16,13 @@ import java.util.function.Consumer;
 public class RoutineSelectionMenu extends Screen {
 
     private final PlayerEditor playerEditor;
+    private final int hashWorld;
     private final Set<String> routineNames;
 
-    public RoutineSelectionMenu(PlayerEntity player) {
+    public RoutineSelectionMenu(PlayerEntity player, int hashWorld) {
         super(Text.of("RoutineSelectionMenu"));
         this.playerEditor = ((PlayerEntityAccessor) player).particlestudio$getEditor();
+        this.hashWorld = hashWorld;
         this.routineNames = playerEditor.getRoutineNames();
     }
 
@@ -31,7 +33,7 @@ public class RoutineSelectionMenu extends Screen {
         int routinesSize = routineNames.size() + 1;
         int x = client.getWindow().getScaledWidth() / 2 - 75;
         int y = (int) (client.getWindow().getScaledHeight() / 2 - 15 - Math.ceil(((double) routinesSize / 2) * 30));
-        addRoutineButton("Nueva rutina", editor -> client.setScreen(new NewRoutineMenu(this, editor)), x, y);
+        addRoutineButton("Nueva rutina", editor -> client.setScreen(new NewRoutineMenu(this, editor, hashWorld)), x, y);
         y += 30;
         for (String name : routineNames) {
             addRoutineButton(name, editor -> {

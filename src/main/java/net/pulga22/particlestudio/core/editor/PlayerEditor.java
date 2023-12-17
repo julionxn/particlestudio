@@ -3,18 +3,18 @@ package net.pulga22.particlestudio.core.editor;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.entity.player.PlayerEntity;
+import net.pulga22.particlestudio.ParticleStudio;
 import net.pulga22.particlestudio.core.editor.handlers.EditorHandler;
 import net.pulga22.particlestudio.core.routines.Routine;
+import net.pulga22.particlestudio.core.routines.managers.PartialRoutine;
 import net.pulga22.particlestudio.utils.mixins.PlayerEntityAccessor;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 public class PlayerEditor {
 
-    private final HashMap<String, Routine> loadedRoutines = new HashMap<>();
+    private final HashMap<UUID, Routine> loadedRoutines = new HashMap<>();
+    private final HashMap<UUID, PartialRoutine> routinesToLoad = new HashMap<>();
     private Set<String> routineNames = new HashSet<>();
     private Routine currentRoutine = null;
     private EditorHandler editorHandler;
@@ -28,23 +28,24 @@ public class PlayerEditor {
         return editorHandler;
     }
 
-    public void loadRoutine(String name, Routine routine){
-        this.loadedRoutines.put(name, routine);
+    public void loadRoutine(Routine routine){
+        this.loadedRoutines.put(routine.uuid, routine);
     }
 
-    public Optional<Routine> getRoutine(String name){
-        if (loadedRoutines.containsKey(name)) return Optional.of(loadedRoutines.get(name));
-        return Optional.empty();
+    public Optional<Routine> getRoutine(UUID uuid){
+        return Optional.ofNullable(loadedRoutines.get(uuid));
     }
 
     public void setActiveRoutine(Routine routine){
         currentRoutine = routine;
     }
 
-    public void createRoutine(String name){
-        if (routineNames.contains(name)) return;
-        loadRoutine(name, new Routine());
+    public Routine createRoutine(String name, int hashWorld){
+        if (routineNames.contains(name)) return null;
         routineNames.add(name);
+        Routine routine = new Routine(UUID.randomUUID(), name, hashWorld);
+        loadRoutine(routine);
+        return routine;
     }
 
     public void openEditor(){
@@ -75,6 +76,23 @@ public class PlayerEditor {
     public void render(DrawContext context, MinecraftClient client){
         if (currentRoutine == null) return;
         editorHandler.getCurrentMenu().render(context, client, currentRoutine);
+    }
+
+    public void prepareToLoad(UUID uuid){
+        routinesToLoad.put(uuid, new PartialRoutine(uuid));
+    }
+
+    public void load(int index, boolean end, UUID uuid, byte[] data){
+        PartialRoutine routineToSave = routinesToLoad.get(uuid);
+        routineToSave.appendBytes(index, data);
+        if (end){
+            routineToSave.getRoutine().ifPresentOrElse(routine -> {
+                ParticleStudio.LOGGER.info("Routine " + routine.name + " loaded.");
+               loadRoutine(routine);
+               setActiveRoutine(routine);
+               openEditor();
+            }, () -> ParticleStudio.LOGGER.error("Something went wrong saving routine with UUID " + uuid));
+        }
     }
 
 }

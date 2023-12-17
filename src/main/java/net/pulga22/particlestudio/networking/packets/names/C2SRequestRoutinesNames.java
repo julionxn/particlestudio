@@ -1,4 +1,4 @@
-package net.pulga22.particlestudio.networking.packets;
+package net.pulga22.particlestudio.networking.packets.names;
 
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;

@@ -13,19 +13,19 @@ import net.pulga22.particlestudio.core.routines.Timeline;
 import net.pulga22.particlestudio.utils.mixins.Keys;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class EditorMenu implements KeySubscriber, ScrollSubscriber {
 
     private static final Identifier ACTIVE_BUTTON_TEXTURE = of("active.png");
     private static final Identifier BORDER_BUTTON_TEXTURE = of("border.png");
-    private static final HashMap<Actions, Identifier> OPTIONS_BORDER_TEXTURES = new HashMap<>(){{
-       put(Actions.Q, of("q_option.png"));
-       put(Actions.E, of("e_option.png"));
-       put(Actions.Z, of("z_option.png"));
-       put(Actions.C, of("c_option.png"));
-    }};
+    private static final Map<Actions, Identifier> OPTIONS_BORDER_TEXTURES = Map.of(
+            Actions.Q, of("q_option.png"),
+            Actions.E, of("e_option.png"),
+            Actions.Z, of("z_option.png"),
+            Actions.C, of("c_option.png")
+    );
     private final List<EditorButton> buttons = new ArrayList<>();
     private int currentIndex = 0;
     protected final EditorHandler editorHandler;
@@ -85,18 +85,11 @@ public class EditorMenu implements KeySubscriber, ScrollSubscriber {
         List<EditorButtonAction> parts = activeButton.getActions();
         int y = context.getScaledWindowHeight() / 2 - ((15 * parts.size()) - 5);
         for (EditorButtonAction part : parts) {
-            context.drawTexture(part.getTexture(editorHandler.getCurrentPhase()), 10, y, 0, 0, 0, 20, 20, 20, 20);
+            Modifiers currentPhase = editorHandler.getCurrentPhase();
+            context.drawTexture(part.getTexture(currentPhase), 10, y, 0, 0, 0, 20, 20, 20, 20);
             context.drawTexture(OPTIONS_BORDER_TEXTURES.get(part.getAction()), 8, y - 2, 0, 0, 0, 28, 28, 28, 28);
-            context.drawTextWithShadow(client.textRenderer, part.getDescription(editorHandler.getCurrentPhase()), 38, y + 5, 0xffffff);
+            context.drawTextWithShadow(client.textRenderer, part.getDescription(currentPhase), 38, y + 5, 0xffffff);
             y += 30;
-        }
-    }
-
-    public void onScroll(double vertical){
-        if (vertical > 0) {
-            currentIndex = (currentIndex < buttons.size() - 1) ? currentIndex + 1 : 0;
-        } else if (vertical < 0) {
-            currentIndex = (currentIndex > 0) ? currentIndex - 1 : buttons.size() - 1;
         }
     }
 
@@ -108,6 +101,14 @@ public class EditorMenu implements KeySubscriber, ScrollSubscriber {
             case Keys.E -> currentButton.perform(Actions.E, modifier, editorHandler.getRoutine());
             case Keys.Z -> currentButton.perform(Actions.Z, modifier, editorHandler.getRoutine());
             case Keys.C -> currentButton.perform(Actions.C, modifier, editorHandler.getRoutine());
+        }
+    }
+
+    public void onScroll(double vertical){
+        if (vertical > 0) {
+            currentIndex = (currentIndex < buttons.size() - 1) ? currentIndex + 1 : 0;
+        } else if (vertical < 0) {
+            currentIndex = (currentIndex > 0) ? currentIndex - 1 : buttons.size() - 1;
         }
     }
 

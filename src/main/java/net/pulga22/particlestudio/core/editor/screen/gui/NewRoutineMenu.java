@@ -5,16 +5,19 @@ import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.text.Text;
 import net.pulga22.particlestudio.core.editor.PlayerEditor;
+import net.pulga22.particlestudio.core.routines.Routine;
 
 public class NewRoutineMenu extends Screen {
 
     private final Screen previousScreen;
     private final PlayerEditor playerEditor;
+    private final int hashWorld;
 
-    public NewRoutineMenu(Screen previousScreen, PlayerEditor playerEditor) {
+    public NewRoutineMenu(Screen previousScreen, PlayerEditor playerEditor, int hashWorld) {
         super(Text.of("NewRoutine"));
         this.previousScreen = previousScreen;
         this.playerEditor = playerEditor;
+        this.hashWorld = hashWorld;
     }
 
     @Override
@@ -30,8 +33,11 @@ public class NewRoutineMenu extends Screen {
         ButtonWidget createButton = ButtonWidget.builder(Text.of("Nueva"), button -> {
             String nameText = name.getText();
             if (playerEditor.getRoutineNames().contains(nameText)) return;
-            playerEditor.createRoutine(nameText);
-            client.setScreen(previousScreen);
+            Routine routine = playerEditor.createRoutine(nameText, hashWorld);
+            if (routine == null) return;
+            playerEditor.setActiveRoutine(routine);
+            playerEditor.openEditor();
+            close();
         }).dimensions(centerX - 100, centerY - 10, 80, 20).build();
         ButtonWidget cancelButton = ButtonWidget.builder(Text.of("Cancelar"), button -> client.setScreen(previousScreen)).dimensions(centerX + 20, centerY - 10, 80, 20).build();
         addDrawableChild(createButton);

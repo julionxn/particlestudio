@@ -8,17 +8,13 @@ import java.util.Optional;
 
 public class WorldRoutines implements Serializable {
 
-    public final HashMap<String, Routine> routines = new HashMap<>(){{
-        put("hola", new Routine());
-        put("adios", new Routine());
-    }};
+    public final HashMap<String, Routine> routines = new HashMap<>();
 
-    public Optional<Routine> getRoutine(String name){
-        if (routines.containsKey(name)) return Optional.of(routines.get(name));
-        return Optional.empty();
+    public Optional<Routine> getRoutine(String name) {
+        return Optional.ofNullable(routines.get(name));
     }
 
-    public void addRoutine(String name, Routine routine){
+    public void setRoutine(String name, Routine routine){
         routines.put(name, routine);
     }
 

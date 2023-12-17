@@ -1,8 +1,8 @@
 package net.pulga22.particlestudio.core.editor.screen.menus.paths;
 
-import net.pulga22.particlestudio.core.editor.handlers.EditorHandler;
 import net.pulga22.particlestudio.core.editor.components.Actions;
 import net.pulga22.particlestudio.core.editor.components.EditorButton;
+import net.pulga22.particlestudio.core.editor.handlers.EditorHandler;
 import net.pulga22.particlestudio.core.routines.paths.CurvePath;
 
 public class CurvePathMenu extends PathMenu {
