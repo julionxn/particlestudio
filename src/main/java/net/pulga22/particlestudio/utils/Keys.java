@@ -1,4 +1,4 @@
-package net.pulga22.particlestudio.utils.mixins;
+package net.pulga22.particlestudio.utils;
 
 public class Keys {
     public static final int ESC = 256;

@@ -28,7 +28,8 @@ public class ParticleStudio implements ModInitializer {
 				new ParticleController(new FabricItemSettings())
 		);
 
-		ServerWorldEvents.LOAD.register((server, world) -> ParticleRoutinesManager.getInstance().loadWorld(world, new WorldRoutines()));
+		ServerWorldEvents.LOAD.register((server, world) -> ParticleRoutinesManager.getInstance().loadWorld(world));
+		ServerWorldEvents.UNLOAD.register((server, world) -> ParticleRoutinesManager.getInstance().saveWorld(world));
 
 		ParticleRoutinesManager.getInstance().prepareParticles();
 

@@ -83,15 +83,16 @@ public class PlayerEditor {
     }
 
     public void loadChunk(int index, boolean end, UUID uuid, byte[] data){
-        PartialRoutine routineToSave = routinesToLoad.get(uuid);
-        routineToSave.appendBytes(index, data);
+        PartialRoutine routineToLoad = routinesToLoad.get(uuid);
+        routineToLoad.appendBytes(index, data);
         if (end){
-            routineToSave.getRoutine().ifPresentOrElse(routine -> {
+            routineToLoad.getRoutine().ifPresentOrElse(routine -> {
                 ParticleStudio.LOGGER.info("Routine " + routine.name + " loaded.");
                loadRoutine(routine);
                setActiveRoutine(routine);
                openEditor();
             }, () -> ParticleStudio.LOGGER.error("Something went wrong saving routine with UUID " + uuid));
+            routinesToLoad.remove(uuid);
         }
     }
 

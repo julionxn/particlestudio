@@ -18,7 +18,7 @@ public class C2SRequestRoutineSave {
 
         UUID uuid = buf.readUuid();
         server.execute(() -> {
-            ParticleRoutinesManager.getInstance().prepareToSave(uuid);
+            ParticleRoutinesManager.getInstance().prepareToSaveChunks(uuid);
             PacketByteBuf newBuf = PacketByteBufs.create().writeUuid(uuid);
             ServerPlayNetworking.send(player, AllPackets.S2C_RESPONSE_ROUTINE_SAVE, newBuf);
         });

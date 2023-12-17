@@ -10,7 +10,7 @@ import net.pulga22.particlestudio.core.editor.handlers.Modifiers;
 import net.pulga22.particlestudio.core.editor.handlers.ScrollSubscriber;
 import net.pulga22.particlestudio.core.routines.Routine;
 import net.pulga22.particlestudio.core.routines.Timeline;
-import net.pulga22.particlestudio.utils.mixins.Keys;
+import net.pulga22.particlestudio.utils.Keys;
 
 import java.util.ArrayList;
 import java.util.List;

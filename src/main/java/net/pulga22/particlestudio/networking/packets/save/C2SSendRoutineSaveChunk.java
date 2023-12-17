@@ -19,7 +19,7 @@ public class C2SSendRoutineSaveChunk {
         boolean end = buf.readBoolean();
         UUID routineUUID = buf.readUuid();
         byte[] data = buf.readByteArray();
-        server.execute(() -> ParticleRoutinesManager.getInstance().save(index, end, routineUUID, data));
+        server.execute(() -> ParticleRoutinesManager.getInstance().saveChunk(index, end, routineUUID, data));
 
     }
 }

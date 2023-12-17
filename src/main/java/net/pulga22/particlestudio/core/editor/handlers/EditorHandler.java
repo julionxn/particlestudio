@@ -12,7 +12,7 @@ import net.pulga22.particlestudio.core.editor.screen.menus.PointMenu;
 import net.pulga22.particlestudio.core.routines.ParticlePoint;
 import net.pulga22.particlestudio.core.routines.Routine;
 import net.pulga22.particlestudio.networking.AllPackets;
-import net.pulga22.particlestudio.utils.mixins.Keys;
+import net.pulga22.particlestudio.utils.Keys;
 
 import java.util.HashSet;
 import java.util.List;

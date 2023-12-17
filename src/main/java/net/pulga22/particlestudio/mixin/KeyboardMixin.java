@@ -5,7 +5,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.player.PlayerEntity;
 import net.pulga22.particlestudio.core.editor.handlers.EditorHandler;
 import net.pulga22.particlestudio.core.editor.handlers.Modifiers;
-import net.pulga22.particlestudio.utils.mixins.Keys;
+import net.pulga22.particlestudio.utils.Keys;
 import net.pulga22.particlestudio.utils.mixins.PlayerEntityAccessor;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
