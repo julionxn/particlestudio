@@ -4,10 +4,7 @@ import net.pulga22.particlestudio.core.routines.Routine;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 public class PartialRoutine {
 
@@ -19,7 +16,16 @@ public class PartialRoutine {
     }
 
     public void appendBytes(int index, byte [] data){
+        int currentSize = loadedBytes.size();
+        while (currentSize < index) {
+            loadedBytes.add(null);
+            currentSize++;
+        }
         loadedBytes.add(index, data);
+    }
+
+    public int getSize(){
+        return (int) loadedBytes.stream().filter(Objects::nonNull).count();
     }
 
     public Optional<Routine> getRoutine(){

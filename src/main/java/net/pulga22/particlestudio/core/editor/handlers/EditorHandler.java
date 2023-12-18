@@ -159,7 +159,7 @@ public class EditorHandler {
                 byte[] datum = data[i];
                 PacketByteBuf buf = PacketByteBufs.create();
                 buf.writeInt(i);
-                buf.writeBoolean(i == data.length - 1).writeUuid(routine.uuid);
+                buf.writeInt(data.length).writeUuid(routine.uuid);
                 buf.writeByteArray(datum);
                 ClientPlayNetworking.send(AllPackets.C2S_SEND_ROUTINE_SAVE_CHUNK, buf);
             }

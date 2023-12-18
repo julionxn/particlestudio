@@ -8,14 +8,16 @@ import java.util.Set;
 
 public class ParticleClientTicker {
 
-    private static ParticleClientTicker instance;
     public final Set<RoutinePlayer> players = new HashSet<>();
 
     private ParticleClientTicker(){}
 
-    public static ParticleClientTicker getInstance(){
-        if (instance == null) instance = new ParticleClientTicker();
-        return instance;
+    private static class SingletonHolder {
+        private static final ParticleClientTicker INSTANCE = new ParticleClientTicker();
+    }
+
+    public static ParticleClientTicker getInstance() {
+        return SingletonHolder.INSTANCE;
     }
 
     public void subscribe(RoutinePlayer routinePlayer){

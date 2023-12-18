@@ -15,7 +15,7 @@ public class S2CReceiveRoutineChunk {
         PlayerEntity player = client.player;
         if (player == null) return;
         int index = buf.readInt();
-        boolean end = buf.readBoolean();
+        int end = buf.readInt();
         UUID routineUUID = buf.readUuid();
         byte[] data = buf.readByteArray();
         client.execute(() -> {

@@ -7,7 +7,6 @@ import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
 import net.pulga22.particlestudio.ParticleStudio;
 import net.pulga22.particlestudio.core.routines.Routine;
-import org.jetbrains.annotations.Nullable;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -19,23 +18,24 @@ import java.util.stream.Stream;
 
 public class ParticleRoutinesManager {
 
-    private static ParticleRoutinesManager INSTANCE;
-    private final HashMap<String, ParticleType<?>> particles = new HashMap<>();
-    private final List<String> particlesIds = new ArrayList<>();
     private final HashMap<UUID, PartialRoutine> routinesToSave = new HashMap<>();
     private final HashMap<Integer, WorldRoutines> worldRoutines = new HashMap<>();
+    private final HashMap<String, ParticleType<?>> particles = new HashMap<>();
+    private final List<String> particlesIds = new ArrayList<>();
     private int particlesAmount;
 
     private ParticleRoutinesManager() {}
 
-    public static ParticleRoutinesManager getInstance(){
-        if (INSTANCE == null) INSTANCE = new ParticleRoutinesManager();
-        return INSTANCE;
+    private static class SingletonHolder {
+        private static final ParticleRoutinesManager INSTANCE = new ParticleRoutinesManager();
     }
 
-    @Nullable
-    public WorldRoutines getRoutines(World world){
-        return this.worldRoutines.get(world.hashCode());
+    public static ParticleRoutinesManager getInstance() {
+        return SingletonHolder.INSTANCE;
+    }
+
+    public Optional<WorldRoutines> getRoutines(World world){
+        return Optional.ofNullable(worldRoutines.get(getWorldHash(world)));
     }
 
     private void registerParticle(ParticleType<?> particleType){
@@ -68,12 +68,13 @@ public class ParticleRoutinesManager {
         routinesToSave.put(uuid, new PartialRoutine(uuid));
     }
 
-    public void saveChunk(int index, boolean end, UUID uuid, byte[] data){
+    public void saveChunk(int index, int end, UUID uuid, byte[] data){
         PartialRoutine routineToSave = routinesToSave.get(uuid);
         routineToSave.appendBytes(index, data);
-        if (end){
-            routineToSave.getRoutine().ifPresentOrElse(routine ->
-                    worldRoutines.get(routine.belongsTo).setRoutine(routine.name, routine),
+        if (end == routineToSave.getSize()){
+            routineToSave.getRoutine().ifPresentOrElse(routine -> {
+                        worldRoutines.get(routine.belongsTo).setRoutine(routine.name, routine);
+                        },
                 () -> ParticleStudio.LOGGER.error("Something went wrong saving routine with UUID " + uuid));
             routinesToSave.remove(uuid);
         }
@@ -90,10 +91,10 @@ public class ParticleRoutinesManager {
                     try (ObjectInputStream ois = new ObjectInputStream(Files.newInputStream(routinePath))) {
                         Routine routine = (Routine) ois.readObject();
                         worldRoutine.setRoutine(routine.name, routine);
-                        ParticleStudio.LOGGER.info("Routine " + routine.name + " loaded.");
+                        ParticleStudio.LOGGER.info("Routine " + routine.name + " loaded from a file.");
                     }
                 }
-                worldRoutines.put(((World) world).hashCode(), worldRoutine);
+                worldRoutines.put(getWorldHash(world), worldRoutine);
             } catch (IOException | ClassNotFoundException e) {
                 throw new RuntimeException(e);
             }
@@ -103,10 +104,8 @@ public class ParticleRoutinesManager {
     public void saveWorld(ServerWorld world){
         resolvePath(world).ifPresent(path -> {
             path.toFile().mkdir();
-            WorldRoutines worldRoutine = worldRoutines.get(world.hashCode());
-            worldRoutine.getRoutines().forEach(routine -> {
-                saveRoutine(path, routine);
-            });
+            WorldRoutines worldRoutine = worldRoutines.get(getWorldHash(world));
+            worldRoutine.getRoutines().forEach(routine -> saveRoutine(path, routine));
         });
     }
 
@@ -128,6 +127,10 @@ public class ParticleRoutinesManager {
         if (!matcher.find()) return Optional.empty();
         Path path = file.toPath().resolve("routines");
         return Optional.of(path);
+    }
+
+    public static int getWorldHash(World world){
+        return world.getRegistryKey().getRegistry().hashCode();
     }
 
 }

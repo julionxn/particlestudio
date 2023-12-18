@@ -16,7 +16,7 @@ public class C2SSendRoutineSaveChunk {
                                 ServerPlayNetworkHandler serverPlayNetworkHandler, PacketByteBuf buf, PacketSender sender) {
 
         int index = buf.readInt();
-        boolean end = buf.readBoolean();
+        int end = buf.readInt();
         UUID routineUUID = buf.readUuid();
         byte[] data = buf.readByteArray();
         server.execute(() -> ParticleRoutinesManager.getInstance().saveChunk(index, end, routineUUID, data));

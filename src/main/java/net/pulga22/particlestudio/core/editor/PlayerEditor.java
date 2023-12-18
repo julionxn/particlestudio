@@ -82,10 +82,10 @@ public class PlayerEditor {
         routinesToLoad.put(uuid, new PartialRoutine(uuid));
     }
 
-    public void loadChunk(int index, boolean end, UUID uuid, byte[] data){
+    public void loadChunk(int index, int end, UUID uuid, byte[] data){
         PartialRoutine routineToLoad = routinesToLoad.get(uuid);
         routineToLoad.appendBytes(index, data);
-        if (end){
+        if (end == routineToLoad.getSize()){
             routineToLoad.getRoutine().ifPresentOrElse(routine -> {
                 ParticleStudio.LOGGER.info("Routine " + routine.name + " loaded.");
                loadRoutine(routine);
