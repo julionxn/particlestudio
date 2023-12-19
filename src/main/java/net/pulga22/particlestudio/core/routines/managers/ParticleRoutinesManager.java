@@ -82,6 +82,7 @@ public class ParticleRoutinesManager {
 
     public void loadWorld(ServerWorld world){
         resolvePath(world).ifPresent(path -> {
+            path.toFile().mkdir();
             try (Stream<Path> walk = Files.walk(path)){
                 WorldRoutines worldRoutine = new WorldRoutines();
                 List<Path> routinePaths = walk.filter(Files::isRegularFile)
@@ -121,7 +122,7 @@ public class ParticleRoutinesManager {
     }
 
     public Optional<Path> resolvePath(ServerWorld world){
-        Pattern pattern = Pattern.compile("\\\\saves\\\\([^\\\\]+)\\\\data");
+        Pattern pattern = Pattern.compile("\\\\(?!DIM[-\\d]+\\\\)([^\\\\]+)\\\\data");
         File file = world.getPersistentStateManager().directory;
         Matcher matcher = pattern.matcher(file.getAbsolutePath());
         if (!matcher.find()) return Optional.empty();

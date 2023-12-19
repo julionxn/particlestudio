@@ -1,6 +1,5 @@
 package net.pulga22.particlestudio.core.routines;
 
-import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.Vec3d;
 import net.pulga22.particlestudio.core.editor.handlers.EditorHandler;
@@ -9,7 +8,10 @@ import net.pulga22.particlestudio.core.editor.handlers.SelectionHandler;
 import net.pulga22.particlestudio.core.routines.paths.Path;
 
 import java.io.*;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.UUID;
 
 public class Routine implements Serializable {
 
@@ -39,41 +41,6 @@ public class Routine implements Serializable {
     public SelectionHandler getSelectionHandler(){
         if (selectionHandler == null) selectionHandler = new SelectionHandler();
         return selectionHandler;
-    }
-
-    public void render(WorldRenderContext context, List<ParticlePoint> selectedPoints){
-        if (timeline.isEmpty() || (routinePlayer != null && routinePlayer.isPlaying())) return;
-        renderPoints(context, selectedPoints);
-        renderPaths(context);
-    }
-
-    private void renderPaths(WorldRenderContext context){
-        if (editingPath == null) return;
-        editingPath.render(context);
-    }
-
-    private void renderPoints(WorldRenderContext context, List<ParticlePoint> selectedPoints){
-        int selectedTick = timeline.getCurrentEditingTick();
-        int lower = timeline.onionLowerBound();
-        int upper = timeline.onionUpperBound();
-        double sigma = Math.min(selectedTick - lower, upper - selectedTick) / 2.0;
-        double sigmaSquared = sigma * sigma;
-        for (int tick = lower; tick <= upper; tick++) {
-            List<ParticlePoint> points = timeline.getPointsOfTick(tick);
-            points.forEach(particlePoint -> {
-                if (selectedPoints.contains(particlePoint)){
-                    PointRenderer.renderSelectedPoint(context, particlePoint.getPosition());
-                    return;
-                }
-                float gradient = (float) generateGradient(particlePoint.tick, selectedTick, sigmaSquared);
-                PointRenderer.renderParticlePoint(context, particlePoint.getPosition(), gradient);
-            });
-        }
-    }
-
-    private double generateGradient(int tick, int editing, double sigmaSquared){
-        double exponent = -Math.pow((tick - editing), 2) / (2 * sigmaSquared);
-        return 1 - Math.pow(Math.E, exponent);
     }
 
     public void addParticlePoint(EditorHandler editorHandler){

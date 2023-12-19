@@ -1,6 +1,7 @@
 package net.pulga22.particlestudio.core.editor.handlers;
 
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.PacketByteBuf;
@@ -11,6 +12,7 @@ import net.pulga22.particlestudio.core.editor.screen.menus.MainMenu;
 import net.pulga22.particlestudio.core.editor.screen.menus.PointMenu;
 import net.pulga22.particlestudio.core.routines.ParticlePoint;
 import net.pulga22.particlestudio.core.routines.Routine;
+import net.pulga22.particlestudio.core.routines.RoutineRenderer;
 import net.pulga22.particlestudio.networking.AllPackets;
 import net.pulga22.particlestudio.utils.Keys;
 
@@ -30,14 +32,20 @@ public class EditorHandler {
     private final Set<ScrollSubscriber> scrollSubscribers = new HashSet<>();
     private final Routine routine;
     private Modifiers currentPhase = Modifiers.NONE;
+    private final RoutineRenderer routineRenderer;
 
     public EditorHandler(PlayerEditor playerEditor, PlayerEntity player, Routine routine) {
         this.editor = playerEditor;
         this.player = player;
         this.routine = routine;
+        this.routineRenderer = new RoutineRenderer(routine);
         MainMenu menu = new MainMenu(this);
         this.menuStack.push(menu);
         menu.onActive(routine);
+    }
+
+    public void render(WorldRenderContext context){
+        routineRenderer.render(context);
     }
 
     public void close(){
@@ -52,16 +60,9 @@ public class EditorHandler {
                 if (selectedPoints.isEmpty()) returnMenu();
                 return;
             }
-            if (selectedPoints.isEmpty()) {
-                changeMenu(new PointMenu(this));
-            }
-            switch (modifier){
-                case NONE -> {
-                    selectedPoints.clear();
-                    selectedPoints.add(particlePoint);
-                }
-                case SHIFT, CTRL -> selectedPoints.add(particlePoint);
-            }
+            if (selectedPoints.isEmpty()) changeMenu(new PointMenu(this));
+            if (modifier == Modifiers.NONE) selectedPoints.clear();
+            selectedPoints.add(particlePoint);
         });
     }
 
