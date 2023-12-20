@@ -20,7 +20,7 @@ public class S2CReceiveRoutineChunk {
         byte[] data = buf.readByteArray();
         client.execute(() -> {
             PlayerEntityAccessor accessor = (PlayerEntityAccessor) player;
-            accessor.particlestudio$getEditor().loadChunk(index, end, routineUUID, data);
+            accessor.particlestudio$getEditor().loadChunkOfRoutine(index, end, routineUUID, data);
         });
 
     }

@@ -19,6 +19,8 @@ public class PlayerEditor {
     private Routine currentRoutine = null;
     private EditorHandler editorHandler;
     private final PlayerEntity player;
+    private boolean loading;
+    private float loadingPercent;
 
     public PlayerEditor(PlayerEntity player){
         this.player = player;
@@ -78,14 +80,22 @@ public class PlayerEditor {
         editorHandler.getCurrentMenu().render(context, client, currentRoutine);
     }
 
-    public void prepareToLoad(UUID uuid){
+    public void updateLoadingState(boolean loading, float loadingPercent){
+        this.loading = loading;
+        this.loadingPercent = loadingPercent;
+    }
+
+    public void prepareToLoadRoutine(UUID uuid){
+        updateLoadingState(true, 0f);
         routinesToLoad.put(uuid, new PartialRoutine(uuid));
     }
 
-    public void loadChunk(int index, int end, UUID uuid, byte[] data){
+    public void loadChunkOfRoutine(int index, int end, UUID uuid, byte[] data){
         PartialRoutine routineToLoad = routinesToLoad.get(uuid);
         routineToLoad.appendBytes(index, data);
-        if (end == routineToLoad.getSize()){
+        int routineToLoadSize = routineToLoad.getSize();
+        loadingPercent = (float) routineToLoadSize / end;
+        if (end == routineToLoadSize){
             routineToLoad.getRoutine().ifPresentOrElse(routine -> {
                 ParticleStudio.LOGGER.info("Routine " + routine.name + " loaded.");
                loadRoutine(routine);
@@ -93,7 +103,14 @@ public class PlayerEditor {
                openEditor();
             }, () -> ParticleStudio.LOGGER.error("Something went wrong saving routine with UUID " + uuid));
             routinesToLoad.remove(uuid);
+            updateLoadingState(false, 0f);
         }
+    }
+
+    public record LoadingInfo(boolean loading, float percent){}
+
+    public LoadingInfo loadingInfo(){
+        return new LoadingInfo(loading, loadingPercent);
     }
 
 }

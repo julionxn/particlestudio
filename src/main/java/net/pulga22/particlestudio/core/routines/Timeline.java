@@ -11,8 +11,8 @@ public class Timeline implements Serializable {
     private int displayLength;
     private int actualLength;
     private transient int currentEditingTick;
-    private transient int onionLowerBound;
-    private transient int onionUpperBound;
+    private int onionLowerBound;
+    private int onionUpperBound;
 
     public void addParticlePoint(int time, ParticlePoint particlePoint){
         while (timeline.size() <= time) {

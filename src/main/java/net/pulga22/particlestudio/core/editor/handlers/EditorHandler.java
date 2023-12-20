@@ -152,6 +152,7 @@ public class EditorHandler {
 
     public void prepareSaveRoutine(Routine routine){
         ClientPlayNetworking.send(AllPackets.C2S_REQUEST_ROUTINE_SAVE, PacketByteBufs.create().writeUuid(routine.uuid));
+        editor.updateLoadingState(true, 0f);
     }
 
     public void saveRoutine(Routine routine){
@@ -163,8 +164,10 @@ public class EditorHandler {
                 buf.writeInt(data.length).writeUuid(routine.uuid);
                 buf.writeByteArray(datum);
                 ClientPlayNetworking.send(AllPackets.C2S_SEND_ROUTINE_SAVE_CHUNK, buf);
+                editor.updateLoadingState(true, (float) (i + 1) / data.length);
             }
         });
+        editor.updateLoadingState(false, 0f);
     }
 
 }

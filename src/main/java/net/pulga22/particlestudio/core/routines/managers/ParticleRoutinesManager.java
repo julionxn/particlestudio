@@ -93,11 +93,13 @@ public class ParticleRoutinesManager {
                         Routine routine = (Routine) ois.readObject();
                         worldRoutine.setRoutine(routine.name, routine);
                         ParticleStudio.LOGGER.info("Routine " + routine.name + " loaded from a file.");
+                    } catch (ClassNotFoundException | IOException e){
+                        ParticleStudio.LOGGER.error("Failed to load routine from " + routinePath + ".", e);
                     }
                 }
                 worldRoutines.put(getWorldHash(world), worldRoutine);
-            } catch (IOException | ClassNotFoundException e) {
-                throw new RuntimeException(e);
+            } catch (IOException e) {
+                ParticleStudio.LOGGER.error("Failed to load world routines of " + getWorldHash(world) + ".", e);
             }
         });
     }

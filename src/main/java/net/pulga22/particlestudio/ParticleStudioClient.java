@@ -11,6 +11,7 @@ import net.minecraft.client.MinecraftClient;
 import net.pulga22.particlestudio.core.editor.PlayerEditor;
 import net.pulga22.particlestudio.core.editor.screen.hud.DebugHud;
 import net.pulga22.particlestudio.core.editor.screen.hud.EditorHud;
+import net.pulga22.particlestudio.core.editor.screen.hud.LoadingHud;
 import net.pulga22.particlestudio.core.routines.managers.ParticleClientTicker;
 import net.pulga22.particlestudio.networking.AllPackets;
 import net.pulga22.particlestudio.utils.mixins.PlayerEntityAccessor;
@@ -26,6 +27,7 @@ public class ParticleStudioClient implements ClientModInitializer {
         });
         HudRenderCallback.EVENT.register(new EditorHud());
         HudRenderCallback.EVENT.register(new DebugHud());
+        HudRenderCallback.EVENT.register(new LoadingHud());
         WorldRenderEvents.END.register(context -> {
             MinecraftClient client = MinecraftClient.getInstance();
             if (client == null) return;

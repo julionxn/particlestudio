@@ -39,7 +39,7 @@ public class S2CResponseRoutineSync {
     }
 
     public static void requestChunks(PlayerEditor playerEditor, UUID uuid, String name){
-        playerEditor.prepareToLoad(uuid);
+        playerEditor.prepareToLoadRoutine(uuid);
         ClientPlayNetworking.send(AllPackets.C2S_REQUEST_ROUTINE_CHUNKS, PacketByteBufs.create().writeUuid(uuid).writeString(name));
     }
 
