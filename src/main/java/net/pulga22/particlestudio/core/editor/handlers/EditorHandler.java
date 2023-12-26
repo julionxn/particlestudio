@@ -48,10 +48,6 @@ public class EditorHandler {
         routineRenderer.render(context);
     }
 
-    public void close(){
-        editor.closeEditor();
-    }
-
     public void onRightClick(Modifiers modifier){
         List<ParticlePoint> selectedPoints = routine.getSelectionHandler().get();
         routine.tryToSelectPoint(player).ifPresent(particlePoint -> {
@@ -70,13 +66,13 @@ public class EditorHandler {
         switch (key){
             case Keys.ESC -> returnMenu();
             case Keys.K -> editor.closeEditor();
-            default -> keySubscribers.forEach(keySubscriber -> keySubscriber.onKey(key, currentPhase));
+            default -> keySubscribers.forEach(keySubscriber -> keySubscriber.onKey(key, currentPhase, routine));
         }
     }
 
     public void onMouseWheel(double vertical){
         if (!scrollActive) return;
-        scrollSubscribers.forEach(scrollSubscribers -> scrollSubscribers.onScroll(vertical));
+        scrollSubscribers.forEach(scrollSubscribers -> scrollSubscribers.onScroll(vertical, routine));
     }
 
     public String getCurrentParticle(){

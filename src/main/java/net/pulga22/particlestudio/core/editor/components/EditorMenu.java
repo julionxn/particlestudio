@@ -39,7 +39,7 @@ public class EditorMenu implements KeySubscriber, ScrollSubscriber {
     public void render(DrawContext context, MinecraftClient client, Routine currentRoutine){
         context.drawTextWithShadow(client.textRenderer, menuName, 6, 6, 0xffffff);
         renderTickInfo(context, client, currentRoutine);
-        renderButtons(context, client);
+        renderButtons(context, client, currentRoutine);
         renderActiveOptions(context, client);
     }
 
@@ -64,13 +64,15 @@ public class EditorMenu implements KeySubscriber, ScrollSubscriber {
         return String.format("%.2f", secs);
     }
 
-    private void renderButtons(DrawContext context, MinecraftClient client){
-        int buttonsAmount = buttons.size();
+    private void renderButtons(DrawContext context, MinecraftClient client, Routine routine){
+        List<EditorButton> activeButtons = buttons.stream().filter(button -> button.getPredicate().apply(routine)).toList();
+        int buttonsAmount = activeButtons.size();
         int x = context.getScaledWindowWidth() / 2 - ((15 * buttonsAmount) - 5);
         for (int i = 0; i < buttonsAmount; i++) {
-            EditorButton currentButton = buttons.get(i);
+            EditorButton currentButton = activeButtons.get(i);
+            if (!currentButton.getPredicate().apply(routine)) continue;
             context.drawTexture(currentButton.getButtonTexture(), x, 10, 0, 0, 0, 20, 20, 20, 20);
-            if (i == currentIndex){
+            if (currentButton.getIndex() == currentIndex){
                 context.drawCenteredTextWithShadow(client.textRenderer, currentButton.getDescription(), context.getScaledWindowWidth() / 2, 36, 0xffffff);
                 context.drawTexture(ACTIVE_BUTTON_TEXTURE, x - 2, 8, 0, 0, 0, 24, 24, 24, 24);
             } else {
@@ -93,10 +95,10 @@ public class EditorMenu implements KeySubscriber, ScrollSubscriber {
         }
     }
 
-    public void onKey(int key, Modifiers modifier){
+    public void onKey(int key, Modifiers modifier, Routine routine){
         EditorButton currentButton = buttons.get(currentIndex);
         switch (key){
-            case Keys.TAB -> onScroll(1.0);
+            case Keys.TAB -> onScroll(1.0, routine);
             case Keys.Q -> currentButton.perform(Actions.Q, modifier, editorHandler.getRoutine());
             case Keys.E -> currentButton.perform(Actions.E, modifier, editorHandler.getRoutine());
             case Keys.Z -> currentButton.perform(Actions.Z, modifier, editorHandler.getRoutine());
@@ -104,16 +106,20 @@ public class EditorMenu implements KeySubscriber, ScrollSubscriber {
         }
     }
 
-    public void onScroll(double vertical){
+    public void onScroll(double vertical, Routine routine){
         if (vertical > 0) {
             currentIndex = (currentIndex < buttons.size() - 1) ? currentIndex + 1 : 0;
         } else if (vertical < 0) {
             currentIndex = (currentIndex > 0) ? currentIndex - 1 : buttons.size() - 1;
         }
+        if (!buttons.get(currentIndex).getPredicate().apply(routine)){
+            onScroll(vertical, routine);
+        }
     }
 
     protected void addButton(EditorButton button){
         this.buttons.add(button);
+        button.setIndex(this.buttons.size() - 1);
     }
 
     protected static Identifier of(String path){

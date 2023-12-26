@@ -17,6 +17,7 @@ public class EditorButton {
     private final String description;
     private final HashMap<Actions, EditorButtonAction> actions = new HashMap<>();
     private Function<Routine, Boolean> predicate = routine -> true;
+    private int index;
 
     public EditorButton(Identifier buttonTexture, String description){
         this.buttonTexture = buttonTexture;
@@ -63,6 +64,14 @@ public class EditorButton {
 
     public static Builder builder(String path, String description){
         return new Builder(path, description);
+    }
+
+    public int getIndex() {
+        return index;
+    }
+
+    public void setIndex(int index) {
+        this.index = index;
     }
 
     public static class Builder {

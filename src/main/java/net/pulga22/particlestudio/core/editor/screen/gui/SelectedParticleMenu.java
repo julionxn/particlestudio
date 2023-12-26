@@ -10,6 +10,7 @@ import net.minecraft.util.Identifier;
 import net.pulga22.particlestudio.ParticleStudio;
 import net.pulga22.particlestudio.core.editor.handlers.EditorHandler;
 import net.pulga22.particlestudio.core.editor.handlers.ScrollSubscriber;
+import net.pulga22.particlestudio.core.routines.Routine;
 import net.pulga22.particlestudio.core.routines.managers.ParticleRoutinesManager;
 
 import java.util.List;
@@ -111,7 +112,7 @@ public class SelectedParticleMenu extends Screen implements ScrollSubscriber {
     }
 
     @Override
-    public void onScroll(double vertical) {
+    public void onScroll(double vertical, Routine routine) {
         adjustParticleIndex((int) -vertical);
         clearAndInit();
     }
