@@ -32,12 +32,14 @@ public abstract class KeyboardMixin {
         PlayerEntityAccessor accessor = (PlayerEntityAccessor) player;
         if (!accessor.particlestudio$isEditing()) return;
         EditorHandler handler = accessor.particlestudio$getEditor().getHandler();
-        switch (action){
-            case 0 -> handler.setCurrentPhase(Modifiers.NONE);
-            case 1, 2 -> {
-                switch (key){
-                    case Keys.SHIFT -> handler.setCurrentPhase(Modifiers.SHIFT);
-                    case Keys.CTRL -> handler.setCurrentPhase(Modifiers.CTRL);
+        if (key == Keys.SHIFT || key == Keys.CTRL){
+            switch (action){
+                case 0 -> handler.setCurrentPhase(Modifiers.NONE);
+                case 1, 2 -> {
+                    switch (key){
+                        case Keys.SHIFT -> handler.setCurrentPhase(Modifiers.SHIFT);
+                        case Keys.CTRL -> handler.setCurrentPhase(Modifiers.CTRL);
+                    }
                 }
             }
         }

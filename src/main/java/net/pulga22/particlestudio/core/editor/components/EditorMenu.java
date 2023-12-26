@@ -68,9 +68,7 @@ public class EditorMenu implements KeySubscriber, ScrollSubscriber {
         List<EditorButton> activeButtons = buttons.stream().filter(button -> button.getPredicate().apply(routine)).toList();
         int buttonsAmount = activeButtons.size();
         int x = context.getScaledWindowWidth() / 2 - ((15 * buttonsAmount) - 5);
-        for (int i = 0; i < buttonsAmount; i++) {
-            EditorButton currentButton = activeButtons.get(i);
-            if (!currentButton.getPredicate().apply(routine)) continue;
+        for (EditorButton currentButton : activeButtons) {
             context.drawTexture(currentButton.getButtonTexture(), x, 10, 0, 0, 0, 20, 20, 20, 20);
             if (currentButton.getIndex() == currentIndex){
                 context.drawCenteredTextWithShadow(client.textRenderer, currentButton.getDescription(), context.getScaledWindowWidth() / 2, 36, 0xffffff);
@@ -86,8 +84,8 @@ public class EditorMenu implements KeySubscriber, ScrollSubscriber {
         EditorButton activeButton = buttons.get(currentIndex);
         List<EditorButtonAction> parts = activeButton.getActions();
         int y = context.getScaledWindowHeight() / 2 - ((15 * parts.size()) - 5);
+        Modifiers currentPhase = editorHandler.getCurrentPhase();
         for (EditorButtonAction part : parts) {
-            Modifiers currentPhase = editorHandler.getCurrentPhase();
             context.drawTexture(part.getTexture(currentPhase), 10, y, 0, 0, 0, 20, 20, 20, 20);
             context.drawTexture(OPTIONS_BORDER_TEXTURES.get(part.getAction()), 8, y - 2, 0, 0, 0, 28, 28, 28, 28);
             context.drawTextWithShadow(client.textRenderer, part.getDescription(currentPhase), 38, y + 5, 0xffffff);
