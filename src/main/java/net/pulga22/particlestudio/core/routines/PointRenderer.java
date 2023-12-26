@@ -13,19 +13,8 @@ import org.lwjgl.opengl.GL11;
 
 public class PointRenderer {
 
-    private static final Identifier PARTICLE_POINT_TEXTURE = new Identifier(ParticleStudio.MOD_ID, "points/point.png");
-    private static final Identifier SELECTED_POINT_TEXTURE = new Identifier(ParticleStudio.MOD_ID, "points/selected.png");
-
-    public static void renderParticlePoint(WorldRenderContext context, Vec3d targetPosition, float gradient){
-        renderBillboardTexture(context, targetPosition, PARTICLE_POINT_TEXTURE, 0.8f, gradient, gradient);
-    }
-
-    public static void renderSelectedPoint(WorldRenderContext context, Vec3d targetPosition){
-        renderBillboardTexture(context, targetPosition, SELECTED_POINT_TEXTURE);
-    }
-
     public static void renderBillboardTexture(WorldRenderContext context, Vec3d targetPosition, Identifier texture){
-        renderBillboardTexture(context, targetPosition, texture, 1.0f, 1.0f, 1.0f);
+        renderBillboardTexture(context, targetPosition, texture, 1f, 1f, 1f);
     }
 
     public static void renderBillboardTexture(WorldRenderContext context, Vec3d targetPosition, Identifier texture, float r, float g, float b){
